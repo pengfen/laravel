@@ -7,3 +7,5 @@ detail.html 详情
 add.html 添加
 edit.html 修改
 delete.html 删除
+user.html 用户及用户权限
+associ.html 关联
