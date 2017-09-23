@@ -1,0 +1,27 @@
+表名 article
+user_id
+时间 created_at/updated_at
+id int
+title varchar 100
+content text
+user_id int
+created_at timestamp
+updated_at timestamp
+
+php artisan make:migration create_articles_table
+
+Schema::create('articles', function (Blueprint $table) {
+    $table->increments('id');
+    $table->string('title', 100)->default();
+    $table->text('content');
+    $table->integer('user_id')->default(0);
+    $table->timestamps();
+});
+
+    Schema::dropIfExists('article');
+
+service
+//mb4string
+Schema::defaultStringLength(191);
+
+php artisan migrate

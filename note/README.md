@@ -1,0 +1,9 @@
+intro.html laravel介绍
+prog.html  编码流程
+templ.html 模板介绍
+table.html 生成表
+model.html 模型
+detail.html 详情
+add.html 添加
+edit.html 修改
+delete.html 删除

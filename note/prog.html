@@ -1,0 +1,15 @@
+1. 编辑路由 routes/web.php
+Route::get(url, 控制器@行为)
+Route::get('/article', '\App\Http\Controllers\ArticleController@index');
+
+2. 编辑控制器
+class ArticleController extends Controller
+{
+    // 文章列表页
+    public function index()
+    {
+    return view("article/index");
+    }
+}
+
+3.编辑模板 resources/views/article --- index.blade.php
