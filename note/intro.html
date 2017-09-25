@@ -1,3 +1,10 @@
+官网 laravel.com
+中文社区 laravel-china.org
+5.4 d.laravel-china.org/docs/5.4
+源码 github.com/laravel
+
+https://pkg.phpcomposer.com/ 中国全量镜像
+
 laravel优势
 
 laravel包含的功能更为丰富 队列 搜索 数据库迁移 定时脚本
@@ -13,3 +20,71 @@ composer create-project laravel/laravel --prefer-dist
 
 .env文件中修改数据库相关信息(用户名 密码等)
 php artisan migrate:install 使用命令在数据库中创建迁移表
+
+linux安装
+1 composer 安装
+php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+mv composer.phar /usr/local/bin/composer
+composer -v # 查看是否安装成功
+which composer # 查看安装目录
+
+2 修改 php.ini
+find / -name php.ini
+vi .../php.ini
+查找 /disable_function
+删除二函数 proc_open proc_get_status
+
+2 使用新用户
+useradd laravel
+passwd laravel
+chown -R laravel:laravel /opt/laravel
+cd /opt/laravel
+su laravel
+
+3 配置中国镜像(全局配置文件)
+composer config -g repo.packagist composer https://packagist.phpcomposer.com
+
+4 安装 laravel
+composer create-project --prefer-dist laravel/laravel laravel54
+
+nginx 修改nginx.conf配置文件
+root /opt/laravel/laravel54/public;
+
+#error_page   404   /404.html;
+#include enable-php.conf;
+
+#新增 支持laravel 优雅链接，在laravel 文档里有说明
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+#新增 支持php 的配置
+location ~ \.php$ {
+    #不能有下面这句 try_files ,不然报错500
+    # try_files $uri /index.php =404;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    #这句注意 后面是.sock 不是127.0.0..1
+    fastcgi_pass  unix:/tmp/php-cgi.sock;
+    fastcgi_index index.php;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+
+[root@peng3 laravel54]# chmod -R 777 storage/
+[root@peng3 laravel54]# chmod -R 777 vendor/
+
+http://192.168.179.129/ # 页面访问
+
+修改配置 .env
+APP_DEBUG=true
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+进入数据库 create database laravel5
+php artisan migrate:install
+mysql -uroot -p
+use laravel5;
+show tables;# 查看是否存在migrations表

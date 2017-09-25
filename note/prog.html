@@ -2,7 +2,7 @@
 Route::get(url, 控制器@行为)
 Route::get('/article', '\App\Http\Controllers\ArticleController@index');
 
-2. 编辑控制器
+2. 编辑控制器 (php artisan make:controller ArticleController 使用命令生成控制器)
 class ArticleController extends Controller
 {
     // 文章列表页
@@ -13,3 +13,20 @@ class ArticleController extends Controller
 }
 
 3.编辑模板 resources/views/article --- index.blade.php
+
+生成表迁移
+php artisan make:migration create_articles_table;
+Schema::create('articles', function (Blueprint $table) {
+    $table->increments('id');
+    $table->string('title', 100)->default()->comment('文章标题');
+    $table->text('content')->comment('文章内容');
+    $table->integer('user_id')->default(0)->comment('用户ID');
+    $table->timestamps();
+});
+
+Schema::dropIfExists('articles');
+
+//mb4string Providers/AppServiceProvider.php 文件中 boot方法中添加以下代码
+Schema::defaultStringLength(191);
+
+php artisan migrate

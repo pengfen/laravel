@@ -12,7 +12,7 @@
                     <p class="blog-post-meta">{{$article->created_at->toFormattedDateString()}} by <a href="/user/{{$article->user_id}}">{{$article->user->name}}</a></p>
 
                     {!! str_limit($article->content, 100, '...') !!}
-                    <p class="blog-post-meta">赞   | 评论 {{$article->comments_count}}</p>
+                    <p class="blog-post-meta">赞 {{$article->zans_count}}  | 评论 {{$article->comments_count}}</p>
                 </div>
             @endforeach
 

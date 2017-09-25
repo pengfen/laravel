@@ -9,3 +9,6 @@ edit.html 修改
 delete.html 删除
 user.html 用户及用户权限
 associ.html 关联
+zan.html 赞功能流程
+es.html  elastic
+center.html 个人中心

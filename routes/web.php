@@ -43,3 +43,7 @@ Route::get('/articles/{article}/delete', '\App\Http\Controllers\ArticleControlle
 
 // 提交评论
 Route::post('/articles/{article}/comment', '\App\Http\Controllers\ArticleController@comment');
+
+// 赞
+Route::get('/articles/{article}/zan', '\App\Http\Controllers\ArticleController@zan');
+Route::get('/articles/{article}/unzan', '\App\Http\Controllers\ArticleController@unzan');

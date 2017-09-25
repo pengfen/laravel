@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Article;
 use \App\Comment;
+use \App\Zan;
 
 class ArticleController extends Controller
 {
@@ -12,7 +13,8 @@ class ArticleController extends Controller
     public function index()
     {
         // $articles = Article::orderBy('created_at', 'desc')->get();
-        $articles = Article::orderBy('created_at', 'desc')->withCount('comments')->paginate(6);
+        // $articles = Article::orderBy('created_at', 'desc')->withCount('comments')->paginate(6);
+        $articles = Article::orderBy('created_at', 'desc')->withCount(['comments', 'zans'])->paginate(6);
         return view("article/index", compact('articles'));
     }
 
@@ -109,6 +111,29 @@ class ArticleController extends Controller
         $article->comments()->save($comment);
 
         //
+        return back();
+    }
+
+    // 赞
+    public function zan(Article $article)
+    {
+        $param = [
+            'user_id' => \Auth::id(),
+            'article_id' => $article->id,
+        ];
+
+        // Zan::firstOrCreate($param);
+        $zan = new Zan();
+        $zan->user_id = \Auth::id();
+        $zan->article_id = $article->id;
+        $zan->save();
+        return back();
+    }
+
+    // 取消赞
+    public function unzan(Article $article)
+    {
+        $article->zan(\Auth::id())->delete();
         return back();
     }
 }
