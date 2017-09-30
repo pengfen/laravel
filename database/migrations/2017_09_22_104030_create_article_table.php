@@ -15,10 +15,10 @@ class CreateArticleTable extends Migration
     {
         //
         Schema::create('articles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title', 100)->default();
-            $table->text('content');
-            $table->integer('user_id')->default(0);
+            $table->increments('id')->comment('ID');
+            $table->string('title', 120)->default('')->change();
+            $table->text('content')->default('')->change();
+            $table->integer('user_id')->default(0)->change();
             $table->timestamps();
         });
     }

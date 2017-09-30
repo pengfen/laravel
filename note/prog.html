@@ -36,10 +36,11 @@ class ArticleController extends Controller
 
 3.编辑模板 resources/views/article --- index.blade.php
 
-生成表迁移
+生成表迁移 (使用migrate创建数据表)
 php artisan make:migration create_articles_table;
 Schema::create('articles', function (Blueprint $table) {
-    $table->increments('id');
+    $table->increments('id')->comment('主键ID');
+    // 设置标题长度为 100
     $table->string('title', 100)->default()->comment('文章标题');
     $table->text('content')->comment('文章内容');
     $table->integer('user_id')->default(0)->comment('用户ID');
@@ -48,7 +49,19 @@ Schema::create('articles', function (Blueprint $table) {
 
 Schema::dropIfExists('articles');
 
-//mb4string Providers/AppServiceProvider.php 文件中 boot方法中添加以下代码
+//mb4string 767 / 4 = 191  Providers/AppServiceProvider.php 文件中 boot方法中添加以下代码
 Schema::defaultStringLength(191);
 
 php artisan migrate
+insert into articles(title, content, user_id, create_at) values('aa', 'content', 1, '2017-09-28');
+
+
+进入数据库验证是否成功
+alias my='mysql -uroot -p123456'
+
+id int
+title varchar
+content text
+user_id int
+created_at timestamp
+updated_at timestamp
