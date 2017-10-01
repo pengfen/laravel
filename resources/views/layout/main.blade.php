@@ -31,7 +31,7 @@
 </head>
 
 <body>
-
+@include('layout.nav')
 <div class="container">
 
     <div class="blog-header">

@@ -30,10 +30,13 @@ Route::post('/user/me/setting', '\App\Http\Controllers\UserController@settingSto
 /* 文章模块相关路由 */
 // 文章列表页
 Route::get('/articles', '\App\Http\Controllers\ArticleController@index');
-// 文章详情页
-Route::get('/articles/{article}', '\App\Http\Controllers\ArticleController@detail');
 // 创建文章
 Route::get('/article/create', '\App\Http\Controllers\ArticleController@create');
+// 文章搜索页
+Route::get('/articles/search', '\App\Http\Controllers\ArticleController@search');
+// 文章详情页
+Route::get('/articles/{article}', '\App\Http\Controllers\ArticleController@detail');
+
 Route::post('/articles', '\App\Http\Controllers\ArticleController@store');
 // 编辑文章
 Route::get('/articles/{article}/edit', '\App\Http\Controllers\ArticleController@edit');

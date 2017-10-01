@@ -1,5 +1,6 @@
 intro.html laravel介绍
 prog.html  编码流程
+route.html 路由
 templ.html 模板介绍
 table.html 生成表
 model.html 模型

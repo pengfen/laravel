@@ -1,3 +1,8 @@
+搜索模块 (搜索设计 ES搭建 页面搭建 业务逻辑)
+搜索设计(ES介绍 中文支持 基本概念)
+ES搭建(ES搭建 laravel相关 模型关联)
+业务逻辑(搜索逻辑 分页)
+
 搜索设计 搜索功能 Elasticsearch选取 Elasticsearch介绍 Elasticsearch中文支持 elastic.co/cn
 
 索引index 类型type 文档document 字段field 模版template
@@ -65,6 +70,14 @@ bin/elasticserch
 
 http://192.168.179.131:9200/ # 访问之前使用 service iptables stop 关闭防火墙
 
+=========================================
+每次启动
+进入192.168.179.131主机
+cd /opt/es/elast...
+su es
+bin/elasticsearch
+http://192.168.179.131:9200/
+
 安装laravel使用elastic包
 安装laravel/scout (http://d.laravel-china.org/docs/5.4/scout
 安装scout的es驱动 (https://github.com/ErickTamayo/laravel-scout-elastic)
@@ -112,4 +125,28 @@ use GuzzleHttp\Client;
 composer require guzzlehttp/guzzle 创建相关依赖
 
 php artisan es:init
+http://192.168.179.131:9200/laravel 测试
 
+模型 Article
+use Laravel\Scout\Searchable;
+use Searchable;
+
+// 定义索引里面的type
+public function searchableAs()
+{
+    return "article";
+}
+
+// 定义有那些字段需要搜索
+public function toSearchableArray()
+{
+    return [
+        'title' => $this->title,
+        'content' => $this->content,
+    ];
+}
+php artisan scout:import "\App\Article"
+
+页面
+=======================================
+Route::get('/articles/search', '\App\Http\Controllers\ArticleController@search');

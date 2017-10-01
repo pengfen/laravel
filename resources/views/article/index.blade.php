@@ -2,7 +2,6 @@
 
 @section("content")
     <div class="col-sm-8 blog-main">
-        <div><a href="/article/create">添加</a>  <a href="/register">注册</a> <a href="/logout">退出</a></div>
         <div style="height: 20px;">
         </div>
         <div>

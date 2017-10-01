@@ -3,9 +3,27 @@
 namespace App;
 
 use App\Model;
+use Laravel\Scout\Searchable;
 
 class Article extends Model
 {
+    use Searchable;
+
+    // 定义索引里面的类型
+    public function searchableAs()
+    {
+        return "article";
+    }
+
+    // 定义需要搜索的字段
+    public function toSearchableArray()
+    {
+        return [
+            'title' => $this->true,
+            'content' => $this->content,
+        ];
+    }
+
     // 关联用户
     public function user()
     {

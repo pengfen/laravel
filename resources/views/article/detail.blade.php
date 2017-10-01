@@ -7,7 +7,7 @@
             <div style="display:inline-flex">
                 <h2 class="blog-post-title">{{$article->title}}</h2>
                 @if (Auth::user()->can('update', $article))
-                    <a style="margin: auto"  href="/posts/{{$article->id}}/edit">
+                    <a style="margin: auto"  href="/articles/{{$article->id}}/edit">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </a>
                 @endif

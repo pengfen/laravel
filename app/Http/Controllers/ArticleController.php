@@ -136,4 +136,19 @@ class ArticleController extends Controller
         $article->zan(\Auth::id())->delete();
         return back();
     }
+
+    // 文章搜索页
+    public function search()
+    {
+        // 验证
+        $this->validate(request(), [
+            'query' => 'required'
+        ]);
+
+        // 逻辑
+        $query = request('query');
+        $articles = \App\Article::search($query)->paginate(2);
+
+        return view('article/search', compact('articles', 'query'));
+    }
 }
