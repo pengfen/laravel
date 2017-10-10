@@ -1,1 +1,31 @@
-test
+#!/usr/bin/env php
+<?php
+
+// file name ---> $argv[1]
+if (!isset($argv[1])) {
+    echo 'exec ./test filename';
+    exit;
+}
+$filename = $argv[1].'.php';
+
+exec('touch '.$filename);
+
+$str=<<<END
+<?php
+
+namespace App\Http\Controllers;
+use \App\Http\Controllers\Controller;
+use \App\Enums as E;
+use \App\Helper\Config;
+
+END;
+$data = $str.PHP_EOL."class $argv[1] extends Controller".PHP_EOL.'{'.PHP_EOL.'}';
+file_put_contents($filename, $data);
+
+$dist = '/home/ak/admin_yb1v1/app/Http/Controllers/';
+exec('mv '.$filename.' '.$dist)
+
+#chmod 755 test
+#./test a
+
+
