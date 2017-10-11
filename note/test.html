@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+// gen controller template
 // file name ---> $argv[1]
 if (!isset($argv[1])) {
     echo 'exec ./test filename';
@@ -25,7 +26,42 @@ file_put_contents($filename, $data);
 $dist = '/home/ak/admin_yb1v1/app/Http/Controllers/';
 exec('mv '.$filename.' '.$dist)
 
-#chmod 755 test
-#./test a
+#chmod 755 gen_c
+#./gen_c a
 
+#!/usr/bin/env php
+<?php
 
+// gen view template
+// $argv[1] ---> controller  $argv[2] ---> action
+// file name ---> $argv[2]
+if (!isset($argv[2])) {
+    echo 'exec ./test controller action';
+    exit;
+}
+$filename = $argv[2].'.blade.php';
+
+exec('touch '.$filename);
+
+$data = "
+@entends('layouts.app')
+@section('content')
+<section class='content'>
+    <div> <!-- search ... -->
+    </div>
+    <hr/>
+    <table class=\"common-table\">
+    </table>
+@include('layouts.page')
+</section>
+@endsection";
+
+file_put_contents($filename, $data);
+
+$dist = '/home/ak/admin_yb1v1/resources/views/'.$argv[1];
+exec('mkdir '.$dist);
+$dist .= '/';
+exec('mv '.$filename.' '.$dist);
+
+# chmod 755 gen_v
+# ./gen_v c v
