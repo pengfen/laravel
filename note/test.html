@@ -71,3 +71,48 @@ alter table table_name nodify column column_name comment comment_name
 alter table table_name comment comment_name
 show full columns frome table_name
 show create table table_name
+
+// 获取所有的父id  数据字段 id parentid  获取数据 id, parentid,parentid...
+// php artisan make:console get_agent_parent_id
+    protected $signature = 'command:get_agent_parent_id';
+
+    protected $description = '获取agent表中的父ID';
+
+    public function handle()
+    {
+        //
+        //dd('调用成功');
+        $task = new \App\Console\Tasks\TaskController();
+
+        $paret_map=$task->t_agent->get_parent_map();
+        foreach($paret_map as $id => $v ) {
+            list( $error_flag, $id_map )=$this->get_id($id, $paret_map);
+            if ($error_flag) {
+                echo "id $id: error_flag:$error_flag, list:  ". join(",", array_keys($id_map) ). "\n";
+            }
+        }
+        // $this->get_id($res);
+    }
+
+    function get_id($id , $parent_map )
+    {
+        $id_map=[ ];
+        $id_map[$id]=true;
+        $error_flag=false;
+        $tmpid=$id;
+        do{
+            $tmpid=@$parent_map[$tmpid]["parentid"];
+            if (isset ($id_map[ $tmpid]) ) {
+                $error_flag=true;
+                break;
+            }
+            $id_map[$tmpid] =true;
+
+        }while (!$tmpid==0 );
+        return array( $error_flag,  $id_map   );
+    }
+
+$sql = $this->gen_sql_new("select id,parentid from %s",self::DB_TABLE_NAME);
+return $this->main_get_list($sql,function( $item){
+    return $item["id"];
+} );
