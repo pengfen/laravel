@@ -12,10 +12,14 @@ class ArticleController extends Controller
     // 文章列表页
     public function index()
     {
+        $user = \Auth::user();
+        if (!$user) {
+            return redirect('/login');
+        }
         // $articles = Article::orderBy('created_at', 'desc')->get();
         // $articles = Article::orderBy('created_at', 'desc')->withCount('comments')->paginate(6);
         $articles = Article::orderBy('created_at', 'desc')->withCount(['comments', 'zans'])->paginate(6);
-        return view("article/index", compact('articles'));
+        return view("article/index", compact('articles'));  `   `   ``12
     }
 
     // 文章详情页

@@ -6,7 +6,7 @@
                     <a class="blog-nav-item " href="/articles">首页</a>
                 </li>
                 <li>
-                    <a class="blog-nav-item" href="/article/create">写文章</a>
+                    <a class="blog-nav-item" href="/articles/create">写文章</a>
                 </li>
                 <li>
                     <a class="blog-nav-item" href="/notices">通知</a>
@@ -22,11 +22,11 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <div>
-                        <img src="" alt="" class="img-rounded" style="border-radius:500px; height: 30px">
-                        <a href="#" class="blog-nav-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">  <span class="caret"></span></a>
+                        <img src="{{$user->avatar}}" alt="" class="img-rounded" style="border-radius:500px; height: 30px">
+                        <a href="#" class="blog-nav-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$user->name}}  <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/user/">我的主页</a></li>
-                            <li><a href="/user/setting">个人设置</a></li>
+                            <li><a href="/user/{{$user->id}}">我的主页</a></li>
+                            <li><a href="/user/{{$user->id}}/setting">个人设置</a></li>
                             <li><a href="/logout">登出</a></li>
                         </ul>
                     </div>

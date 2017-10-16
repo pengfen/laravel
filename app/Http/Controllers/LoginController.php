@@ -9,6 +9,9 @@ class LoginController extends Controller
     //
     public function index()
     {
+        if(\Auth::check()) {
+            return redirect("/articles");
+        }
         return view('login/index');
     }
 

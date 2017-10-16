@@ -50,3 +50,7 @@ Route::post('/articles/{article}/comment', '\App\Http\Controllers\ArticleControl
 // 赞
 Route::get('/articles/{article}/zan', '\App\Http\Controllers\ArticleController@zan');
 Route::get('/articles/{article}/unzan', '\App\Http\Controllers\ArticleController@unzan');
+
+// 个人中心
+Route::get('/user/{user}', '\App\Http\Controllers\UserController@show');
+Route::post('/user/{user}/fan', '\App\Http\Controllers\UserController@fan');
