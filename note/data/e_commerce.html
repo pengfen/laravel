@@ -1,0 +1,41 @@
+数据库设计规范
+
+数据结构设计 逻辑设计 ---> 物理设计
+实际工作中   逻辑设计 + 物理设计
+物理设计 表名 字段名 字段类型
+
+数据库设计规范
+数据库命名规范
+数据库基本设计规范
+数据库索引设计规范
+
+数据库设计规范
+数据库字段设计规范
+数据库SQL开发规范
+数据库操作行为规范
+
+所有数据库对象名称必须使用小写字母并用下划线分割
+不同的数据库名 DbName dbname
+不同的表名     Table table tabLe
+所有数据库对象名称禁止使用MySQL保留关键字 
+http://dev.mysql.com/doc/refman/5.7/en/key/words.html
+
+数据库对象的命名要能做到见名识义 并且最好不要超过32个字符
+例如 用户数据库 mc_userdb 用户账号表 user_account
+临时库表必须以tmp为前缀并以日期为后缀
+备份库 备份表必须以bak为前缀并以日期为后缀
+
+所有存储相同数据的列名称列类型必须一致
+create table customer_inf(
+    customer_inf_id int unsigned AUTO_INCREMENT not null comment '自增ID'，
+	customer_id int unsigned not null comment 'customer_login表的自增ID'
+	customer_name varchar(20) not null comment '用户真实姓名',
+	identity_card_type tinyint not null default 1 comment '证件类型:"
+	identity_card_no varchar(20) comment '证件号码'
+)
+create table order_master(
+    order_id int unsigned not null AUTO_INCREMENT comment '订单ID‘，
+	order_sn bigint unsigned not null comment '订单编号',
+	shipping_user varchar(10) not null comment '收货人姓名'
+	province smallint not null comment '收货人所在省'
+)
