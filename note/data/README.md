@@ -12,3 +12,14 @@ query_optim.html 查询优化
 shard.html 分库分表
 monitor.html 监控
 e_commerce.html电商
+
+===================================
+mysql5.7 复制功能实战
+mysql5.7 新特性
+1.html mysql开发技巧一
+2.html mysql开发技巧二
+3.html mysql开发技巧三
+4.html 性能优化之mysql优化
+5.html 数据库设计那些事
+6.html mysql电商项目
+7.html mysql性能管理
