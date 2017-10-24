@@ -63,8 +63,10 @@ create table tb_sequence(id int auto_increment not null, primary key(id));
 insert into tb_sequence(id) values(),(),(),(),(),();
 
 利用序列表处理列转行的数据
-select user_name,replace(substring(substring_index(mobile,',',a.id),char_length(substring_index(mobile,',',a.id-1))+1,',','') as mobile from tb_sequence a 
-cross join(select user_name,concat(mobile,',') as mobile,length(mobile)-length(replace(mobile,',',''))+1 siae from user1 b) b on a.id <= b.size;
+select user_name,replace(substring(substring_index(mobile,',',a.id),
+char_length(substring_index(mobile,',',a.id-1))+1,',','') as mobile from tb_sequence a
+cross join(select user_name,concat(mobile,',') as mobile,length(mobile)-length(replace(mobile,',',''))+1 siae
+from user1 b) b on a.id <= b.size;
 
 create table user1_equipment(
     id int not null auto_increment primary key,
@@ -73,7 +75,8 @@ create table user1_equipment(
 	clothing varchar(10) not null default '' comment '衣服装备',
 	shoe varchar(10) not null default '' comment '鞋装备'
 ) comment = '装备表';
-insert into user1_equipment(user_id,arms,clothing,shoe) values(3, '金箍棒','锁子黄金甲','藕丝步云履'),(2,'九齿钉耙','僧衣','僧鞋'),(4,'降妖宝杖','僧衣','僧鞋'),(1,'九环锡杖','锦谰袈裟','僧鞋');
+insert into user1_equipment(user_id,arms,clothing,shoe) values(3, '金箍棒','锁子黄金甲','藕丝步云履'),
+(2,'九齿钉耙','僧衣','僧鞋'),(4,'降妖宝杖','僧衣','僧鞋'),(1,'九环锡杖','锦谰袈裟','僧鞋');
 
 select user_name,'arms' as equipment,arms from user1 a join user1_equipment b on a.id=b.user_id;
 select user_name,'clothing' as equipment,clothing from user1 a join user1_equipment b on a.id=b.user_id;
@@ -85,10 +88,13 @@ select b.user_name,clothing,clothing from user1_equipment a join user1 b on a.us
 select b.user_name,shoe,shoe from user1_equipment a join user1 b on a.user_id=b.id order by 1,2
 
 select user_name,arms,clothing,shoe from user1 a join user1_equipment b on a.id=b.user_id;
-select user_name,arms,clothing,shoe from user1 a join user1_equipment b on a.id=b.user_id cross join tb_sequence c where c.id <= 3;
-select user_name,arms,clothing,shoe from user1 a join user1_equipment b on a.id=b.user_id cross join tb_sequence c where c.id <= 3 order by user_name;
-select user_name,case when c.id = 1 then arms end, case when c.id = 2 then clothing end, case when c.id = 3 then shoe end from user1 a
-join user1_equipment b on a.id=b.user_id cross join tb_sequence c where c.id <= 3 order by user_name;
+select user_name,arms,clothing,shoe from user1 a join user1_equipment b on a.id=b.user_id
+cross join tb_sequence c where c.id <= 3;
+select user_name,arms,clothing,shoe from user1 a join user1_equipment b on a.id=b.user_id
+cross join tb_sequence c where c.id <= 3 order by user_name;
+select user_name,case when c.id = 1 then arms end, case when c.id = 2 then clothing end,
+case when c.id = 3 then shoe end from user1 a join user1_equipment b on a.id=b.user_id
+cross join tb_sequence c where c.id <= 3 order by user_name;
 select user_name,case when c.id=1 then 'arms' when c.id=2 then 'clothing' when c.id=3 then 'shoe' end as equipment,
 coalesce(case when c.id=1 then arms end,case when c.id=2 then clothing end,case when c.id=3 then shoe end) as eq_name from user1 a join
 user1_equipment b on a.id=b.user_id cross join tb_sequence c where c.id <= 3 order by user_name
@@ -152,7 +158,8 @@ select user_name,over,count(*) from user1_test group by user_name,over having co
 select user_name,count(*) from user1_test group by user_name having count(*) > 10
 
 删除重复数据 对于相同数据保留ID最大的
-delete a from user1_test a join(select user_name,count(*),max(id) as id from user1_test group by user_name having count(*) > 1) b
+delete a from user1_test a join(select user_name,count(*),max(id) as id from user1_test group by user_name
+having count(*) > 1) b
 on a.user_name = b.user_name where a.id < b.id
 
 更复杂的情况
