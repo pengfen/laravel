@@ -16,12 +16,13 @@ SQL 开发技巧着重于DML语句 select insert update delete
 
 如何正确的使用Join从句
 举例中使用表如下 西天取经四人组 VS 悟空的朋友们
+create database my_test default character set utf8 collate utf8_general_ci;
 use my_test;
 create table user1(
-    id int unsigned not null auto_increment primary key,
-	user_name varchar(3) not null default '' comment '用户名',
-	over varchar(5) not null default '' comment '解释'
-) comment = '测试连接表一';
+id int unsigned not null auto_increment primary key,
+user_name varchar(3) not null default '' comment '用户名',
+over varchar(5) not null default '' comment '解释'
+) engine=innodb default charset=utf8 comment = '测试连接表一';
 desc user1;
 insert into user1(user_name,over) values('唐僧','功德佛'),('猪八','净坛使者'),('孙悟空','斗战胜佛'),('沙僧','金身罗汉');
 select id,user_name,over from user1;
