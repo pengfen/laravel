@@ -116,3 +116,12 @@ $sql = $this->gen_sql_new("select id,parentid from %s",self::DB_TABLE_NAME);
 return $this->main_get_list($sql,function( $item){
     return $item["id"];
 } );
+
+sql
+    select teacherid, phone, train_through_new_time
+    from db_weiyi.t_teacher_info t where is_test_user=0 and
+    not exists (select 1 from db_weiyi.t_teacher_flow where t.teacherid=teacherid)
+
+    select sum(train_through_new_time>0) from t_teacher_flow => 32
+    select count(*) from t_teacher_flow => 81
+

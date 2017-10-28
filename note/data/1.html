@@ -24,11 +24,11 @@ user_name varchar(3) not null default '' comment '用户名',
 over varchar(5) not null default '' comment '解释'
 ) engine=innodb default charset=utf8 comment = '测试连接表一';
 desc user1;
-insert into user1(user_name,over) values('唐僧','功德佛'),('猪八','净坛使者'),('孙悟空','斗战胜佛'),('沙僧','金身罗汉');
+insert into user1(user_name,over) values('唐僧','功德佛'),('猪八戒','净坛使者'),('孙悟空','斗战胜佛'),('沙僧','金身罗汉');
 select id,user_name,over from user1;
 id  user_name  over
 1   唐僧       功德佛
-2   猪八       净坛使者
+2   猪八戒     净坛使者
 3   孙悟空     斗战胜佛
 4   沙僧       金身罗汉
 

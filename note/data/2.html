@@ -74,7 +74,7 @@ create table user1_equipment(
 	arms varchar(10) not null default '' comment '武器装备',
 	clothing varchar(10) not null default '' comment '衣服装备',
 	shoe varchar(10) not null default '' comment '鞋装备'
-) comment = '装备表';
+) engine=innodb default charset=utf8 comment = '装备表';
 insert into user1_equipment(user_id,arms,clothing,shoe) values(3, '金箍棒','锁子黄金甲','藕丝步云履'),
 (2,'九齿钉耙','僧衣','僧鞋'),(4,'降妖宝杖','僧衣','僧鞋'),(1,'九环锡杖','锦谰袈裟','僧鞋');
 
@@ -145,7 +145,7 @@ create table user1_test(
 	user_name varchar(3) not null default '' comment = '用户名',
 	over varchar(100) not null default '' comment = '备注',
 	mobile varchar(100) not null decimal '' comment = '手机',
-) comment = '';
+) engine=innodb default charset=utf8 comment = '';
 desc user1_test;
 insert into user1_test(user_name,over,mobile) select user_name,over,mobile from user1;
 insert into user1_test(user_name,over,mobile) select user_name,over,mobile from user1 limit 2;
