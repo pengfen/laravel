@@ -125,3 +125,63 @@ sql
     select sum(train_through_new_time>0) from t_teacher_flow => 32
     select count(*) from t_teacher_flow => 81
 
+    枚举
+    编写枚举类
+    return array(
+        "name" => "月份定义" ,
+        array(1,"seller_order","销售合同月份定义"),
+        array(2,"",""),
+    );
+    生成枚举类
+    class Emonth_def_type extends \App\Core\Enum_base
+    {
+        static public $field_name = "month_def_type"  ;
+        static public $name = "月份定义"  ;
+        static $desc_map= array(
+            1 => "销售合同月份定义",
+            2 => "",
+        );
+        static $simple_desc_map= array(
+            1 => "",
+            2 => "",
+        );
+        static $s2v_map= array(
+            "seller_order" => 1,
+            "" => 2,
+        );
+        static $v2s_map= array(
+            1=>  "seller_order",
+            2=>  "",
+        );
+
+        //销售合同月份定义
+        const V_1=1;
+        //销售合同月份定义
+        const V_SELLER_ORDER=1;
+        //
+        const V_2=2;
+
+        //销售合同月份定义
+        const S_1="seller_order";
+        //销售合同月份定义
+        const S_SELLER_ORDER="seller_order";
+        //
+        const S_2="";
+
+        static public function check_seller_order ($val){
+            return $val == 1;
+        }
+    };
+
+// 调用父类方法
+static function get_desc( $val){
+    if (isset(static::$desc_map[$val])) {
+        return   static::$desc_map[$val];
+    }else{
+        return $val;
+    }
+}
+
+E\Emonth_def_type::set_item_value_str($item);
+
+
