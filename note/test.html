@@ -184,4 +184,20 @@ static function get_desc( $val){
 
 E\Emonth_def_type::set_item_value_str($item);
 
+$task = new \App\Console\Tasks\TaskController();
+// 随机添加测试时间
+$begin = strtotime('2017-07-01');
+$end = time();
+$info = $task->t_teacher_flow->get_all_list();
+foreach($info as $teacherid => $item) {
+    $timestamp = rand($begin, $end);
+    $task->t_teacher_flow->field_update_list($teacherid,[
+        "trial_lecture_pass_time" => $timestamp,
+        "simul_test_lesson_pass_time" => $timestamp,
+        "train_through_new_time" => $timestamp
+    ]);
+}
 
+array_rand($arr); // 随机取数组的值
+
+select unix_timestamp('2017-10-1');
