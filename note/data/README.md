@@ -14,8 +14,6 @@ monitor.html 监控
 e_commerce.html电商
 
 ===================================
-mysql5.7 复制功能实战
-mysql5.7 新特性
 1.html mysql开发技巧一
 2.html mysql开发技巧二
 3.html mysql开发技巧三
@@ -23,3 +21,5 @@ mysql5.7 新特性
 5.html 数据库设计那些事
 6.html mysql电商项目
 7.html mysql性能管理
+8.html mysql5.7 复制功能实战
+9.html mysql5.7 新特性
