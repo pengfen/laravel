@@ -201,3 +201,10 @@ foreach($info as $teacherid => $item) {
 array_rand($arr); // 随机取数组的值
 
 select unix_timestamp('2017-10-1');
+
+substring(user_agent,1,1) 获取user_agent字段的第一个字符
+if(substring(user_agent,1,1)='{',1,0) 如果第一个字符是{返回1否则返回0
+if(substing(user_agent,1,1)='{',1,0) > 0 返回值大于0 则加一
+总数480累加450
+
+select sum(if(substring(user_agent,1,1)='{',1,0) > 0) sum from t_teacher_info where user_agent != '' and is_test_user=0
