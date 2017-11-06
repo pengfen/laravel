@@ -1,85 +1,85 @@
-ÈçºÎÔÚ×Ó²éÑ¯ÖÐÆ¥ÅäÁ½¸öÖµ
-½â¾öÍ¬ÊôÐÔ¶àÖµ¹ýÂËµÄÎÊÌâ
-ÈçºÎ¼ÆËãÀÛ½øË°ÀàÎÊÌâ
+å¦‚ä½•åœ¨å­æŸ¥è¯¢ä¸­åŒ¹é…ä¸¤ä¸ªå€¼
+è§£å†³åŒå±žæ€§å¤šå€¼è¿‡æ»¤çš„é—®é¢˜
+å¦‚ä½•è®¡ç®—ç´¯è¿›ç¨Žç±»é—®é¢˜
 
-Ê²Ã´ÊÇ×Ó²éÑ¯
-µ±Ò»¸ö²éÑ¯ÊÇÁíÒ»¸ö²éÑ¯µÄÌõ¼þÊ± ³ÆÖ®Îª×Ó²éÑ¯
+ä»€ä¹ˆæ˜¯å­æŸ¥è¯¢
+å½“ä¸€ä¸ªæŸ¥è¯¢æ˜¯å¦ä¸€ä¸ªæŸ¥è¯¢çš„æ¡ä»¶æ—¶ ç§°ä¹‹ä¸ºå­æŸ¥è¯¢
 
-³£¼ûµÄ×Ó²éÑ¯Ê¹ÓÃ³¡¾°
-Ê¹ÓÃ×Ó²éÑ¯¿ÉÒÔ±ÜÃâÓÉÓÚ×Ó²éÑ¯ÖÐµÄÊý¾Ý²úÉúµÄÖØ¸´
+å¸¸è§çš„å­æŸ¥è¯¢ä½¿ç”¨åœºæ™¯
+ä½¿ç”¨å­æŸ¥è¯¢å¯ä»¥é¿å…ç”±äºŽå­æŸ¥è¯¢ä¸­çš„æ•°æ®äº§ç”Ÿçš„é‡å¤
 select user_name from user1 where id in (select user_id from user_kills);
 select * from user_kills;
 select a.user_name from user1 a join user_kills b on a.id=b.user_id;
 select distinct a.user_name from user1 a join user_kills b on a.id=b.user_id;
 
-Ê¹ÓÃ×Ó²éÑ¯¸ü·ûºÏÓïÒâ ¸üºÃÀí½â
+ä½¿ç”¨å­æŸ¥è¯¢æ›´ç¬¦åˆè¯­æ„ æ›´å¥½ç†è§£
 
-²éÑ¯³öÃ¿Ò»¸öÈ¡¾­ÈË´ò¹Ö×î¶àµÄÈÕÆÚ ²¢ÁÐ³öÈ¡¾­ÈËµÄÐÕÃû ´ò¹Ö×î¶àµÄÈÕÆÚºÍ´ò¹ÖµÄÊýÁ¿
+æŸ¥è¯¢å‡ºæ¯ä¸€ä¸ªå–ç»äººæ‰“æ€ªæœ€å¤šçš„æ—¥æœŸ å¹¶åˆ—å‡ºå–ç»äººçš„å§“å æ‰“æ€ªæœ€å¤šçš„æ—¥æœŸå’Œæ‰“æ€ªçš„æ•°é‡
 select user_id,max(kills) as cnt from user_kills group by user_id;
 select a.user_name,b.timestr,kills from user1 a join user_kills b on a.id=b.user_id
 join (select user_id,max(kills) as cnt from user_kills group by user_id) c on b.user_id=c.user_id and b.kills = c.cnt;
 
-¶àÀý¹ýÂËµÄÊ¹ÓÃ³¡¾°
-MySQLÖÐ¶ÀÓÐµÄ¶àÀý¹ýÂË·½Ê½
+å¤šä¾‹è¿‡æ»¤çš„ä½¿ç”¨åœºæ™¯
+MySQLä¸­ç‹¬æœ‰çš„å¤šä¾‹è¿‡æ»¤æ–¹å¼
 select a.user_name,b.timestr,kills from user1 a join user_kills b on a.id=b.user_id where(b.user_id,b.kills)
 in(select user_id,max(kills) from user_kills group by user_id)
 
-Ê²Ã´ÊÇÍ¬Ò»ÊôÐÔµÄ¶àÖµ¹ýÂË
-ÎªÁË½âÊÍÔÚÎÒÃÇµÄÊ¾Àý¿âÖÐÔö¼ÓÒ»¸ö¼¼ÄÜ±í
+ä»€ä¹ˆæ˜¯åŒä¸€å±žæ€§çš„å¤šå€¼è¿‡æ»¤
+ä¸ºäº†è§£é‡Šåœ¨æˆ‘ä»¬çš„ç¤ºä¾‹åº“ä¸­å¢žåŠ ä¸€ä¸ªæŠ€èƒ½è¡¨
 user_name  skill   skill_level
-ÌÆÉ®       ½ô¹¿Öä  5
-ÌÆÉ®       ´ò×ø    4
-ÌÆÉ®       Äî¾­    5
-ÌÆÉ®       ±ä»¯    0
-Öí°Ë½ä     ±ä»¯    4
-Öí°Ë½ä     ÌÚÔÆ    3
-Öí°Ë½ä     ¸¡Ë®    5
-Öí°Ë½ä     Äî¾­    0
-Öí°Ë½ä     ½ô¹¿Öä  0
-ËïÎò¿Õ     ±ä»¯    5
-ËïÎò¿Õ     ÌÚÔÆ    5
-ËïÎò¿Õ     ¸¡Ë®    3
-ËïÎò¿Õ     ÇëÉñ    5
-ËïÎò¿Õ     ½ô¹¿Öä  0
-É³É®       ±ä»¯    2
-É³É®       ÌÚÔÆ    2
-É³É®       ¸¡Ë®    4
-É³É®       Äî¾­    1
-É³É®       ½ô¹¿Öä  0
+å”åƒ§       ç´§ç®å’’  5
+å”åƒ§       æ‰“å    4
+å”åƒ§       å¿µç»    5
+å”åƒ§       å˜åŒ–    0
+çŒªå…«æˆ’     å˜åŒ–    4
+çŒªå…«æˆ’     è…¾äº‘    3
+çŒªå…«æˆ’     æµ®æ°´    5
+çŒªå…«æˆ’     å¿µç»    0
+çŒªå…«æˆ’     ç´§ç®å’’  0
+å­™æ‚Ÿç©º     å˜åŒ–    5
+å­™æ‚Ÿç©º     è…¾äº‘    5
+å­™æ‚Ÿç©º     æµ®æ°´    3
+å­™æ‚Ÿç©º     è¯·ç¥ž    5
+å­™æ‚Ÿç©º     ç´§ç®å’’  0
+æ²™åƒ§       å˜åŒ–    2
+æ²™åƒ§       è…¾äº‘    2
+æ²™åƒ§       æµ®æ°´    4
+æ²™åƒ§       å¿µç»    1
+æ²™åƒ§       ç´§ç®å’’  0
 
-ÈçºÎ²éÑ¯³öÍ¬Ê±¾ßÓÐ±ä»¯ºÍÄî¾­ÕâÁ½Ïî¼¼ÄÜµÄÈ¡¾­ÈË
+å¦‚ä½•æŸ¥è¯¢å‡ºåŒæ—¶å…·æœ‰å˜åŒ–å’Œå¿µç»è¿™ä¸¤é¡¹æŠ€èƒ½çš„å–ç»äºº
 select a.user_name,b.skill,b.skill_level from user1 a join user_kills b on a.id=b.user_id
-where skill in('±ä»¯','Äî¾­') and skill_level > 0;
-select a.user_name,b.skill,c.skill from user1 a join user1_skills b on a.id=b.user_id and b.skill='Äî¾­' join user1_skills c on
-c.user_id=b.user_id and c.skill='±ä»¯' where b.skill_level>0 and c.skill_level>0;
+where skill in('å˜åŒ–','å¿µç»') and skill_level > 0;
+select a.user_name,b.skill,c.skill from user1 a join user1_skills b on a.id=b.user_id and b.skill='å¿µç»' join user1_skills c on
+c.user_id=b.user_id and c.skill='å˜åŒ–' where b.skill_level>0 and c.skill_level>0;
 
-select a.user_name,b.skill,c.skill,d.skill from user1 a join user1_skill b on a.id=b.user_id and b.skill='Äî¾­' 
-join user1_skill c on c.user_id=b.user_id and c.skill='±ä»¯' join user1_skill d on d.user_id=c.user_id and d.skill='ÌÚÔÆ' 
+select a.user_name,b.skill,c.skill,d.skill from user1 a join user1_skill b on a.id=b.user_id and b.skill='å¿µç»' 
+join user1_skill c on c.user_id=b.user_id and c.skill='å˜åŒ–' join user1_skill d on d.user_id=c.user_id and d.skill='è…¾äº‘' 
 where b.skill_level>0 and c.skill_level>0 and d.skill_level>0;
 
-select a.user_name,b.skill,c.skill,d.skill,e.skill from user1 a left join user1_skills b on a.id=b.user_id and b.skill='Äî¾­' and b.skill_level>0
-left join user1_skills c on a.id=c.user_id and c.skill='±ä»¯' and c.skill_level>0 
-left join user1_skills d on a.id=d.user_id and d.skill='ÌÚÔÆ' and d.skill_level>0
-left join user1_skills e on a.id=e.user_id and e.skill='¸¡Ë®' and e.skill_level>0
+select a.user_name,b.skill,c.skill,d.skill,e.skill from user1 a left join user1_skills b on a.id=b.user_id and b.skill='å¿µç»' and b.skill_level>0
+left join user1_skills c on a.id=c.user_id and c.skill='å˜åŒ–' and c.skill_level>0 
+left join user1_skills d on a.id=d.user_id and d.skill='è…¾äº‘' and d.skill_level>0
+left join user1_skills e on a.id=e.user_id and e.skill='æµ®æ°´' and e.skill_level>0
 
-select a.user_name,b.skill,c.skill,d.skill,e.skill from user1 a left join user1_skills b on a.id=b.user_id and b.skill='Äî¾­' and b.skill_level>0
-left join user1_skills c on a.id=c.user_id and c.skill='±ä»¯' and c.skill_level>0 
-left join user1_skills d on a.id=d.user_id and d.skill='ÌÚÔÆ' and d.skill_level>0
-left join user1_skills e on a.id=e.user_id and e.skill='¸¡Ë®' and e.skill_level>0 where (case where b.skill is not null then 1 else 0 end)
+select a.user_name,b.skill,c.skill,d.skill,e.skill from user1 a left join user1_skills b on a.id=b.user_id and b.skill='å¿µç»' and b.skill_level>0
+left join user1_skills c on a.id=c.user_id and c.skill='å˜åŒ–' and c.skill_level>0 
+left join user1_skills d on a.id=d.user_id and d.skill='è…¾äº‘' and d.skill_level>0
+left join user1_skills e on a.id=e.user_id and e.skill='æµ®æ°´' and e.skill_level>0 where (case where b.skill is not null then 1 else 0 end)
 +(case where c.skill is not null then 1 else 0 end)+(case where d.skill is not null then 1 else 0 end)+(case where e.skill is not null then 1 else 0 end) >= 2
 
-Ê¹ÓÃgroup·½·¨½â¾öÎÊÌâ
-select a.user_name from user1 a join user1_skills b on a.id=b.user_id where b.skill in('Äî¾­','±ä»¯','ÌÚÔÆ','¸¡Ë®') and b.skill_level>0 group by a.user_name having count(*)>=2
+ä½¿ç”¨groupæ–¹æ³•è§£å†³é—®é¢˜
+select a.user_name from user1 a join user1_skills b on a.id=b.user_id where b.skill in('å¿µç»','å˜åŒ–','è…¾äº‘','æµ®æ°´') and b.skill_level>0 group by a.user_name having count(*)>=2
 
-ÈçºÎ¼ÆËãÀÛ½øË°ÀàÎÊÌâ
-Ê²Ã´ÊÇÀÛ½øË°
-×î³£¼ûµÄÀÛ½øË° --- ¸öÈËËùµÃË°
-È¡¾­ËÄÈË×éµÄ¹¤×ÊÊÕÈë
+å¦‚ä½•è®¡ç®—ç´¯è¿›ç¨Žç±»é—®é¢˜
+ä»€ä¹ˆæ˜¯ç´¯è¿›ç¨Ž
+æœ€å¸¸è§çš„ç´¯è¿›ç¨Ž --- ä¸ªäººæ‰€å¾—ç¨Ž
+å–ç»å››äººç»„çš„å·¥èµ„æ”¶å…¥
 user_name  money
-ÌÆÉ®       35000
-Öí°Ë½ä     15000
-ËïÎò¿Õ     28000
-É³É®       8000
+å”åƒ§       35000
+çŒªå…«æˆ’     15000
+å­™æ‚Ÿç©º     28000
+æ²™åƒ§       8000
 
 low    high   rate
 0      1500   3%
@@ -89,8 +89,8 @@ low    high   rate
 35000  55000  30%
 50000  80000  35%
 80000         45%
-Ê¹ÓÃjoinÊµÏÖ¹¤×Ê¶Ô²»Í¬ÄÉË°Çø¼äµÄÆ¥Åä
+ä½¿ç”¨joinå®žçŽ°å·¥èµ„å¯¹ä¸åŒçº³ç¨ŽåŒºé—´çš„åŒ¹é…
 select a.user_name,money,low,high,rate from user1 a join taxRate b on a.money>b.low order by user_name;
-ÀûÓÃleast()º¯ÊýÀ´È·¶¨Ã¿¸öÇø¼äÄÉË°¶î
+åˆ©ç”¨least()å‡½æ•°æ¥ç¡®å®šæ¯ä¸ªåŒºé—´çº³ç¨Žé¢
 select user_name,money,low,high least(money-low,hight-low) as curmoney,rate from user1 a join taxRate b on a.money > b.low 
 order by user_name,low;

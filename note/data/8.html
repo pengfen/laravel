@@ -1,26 +1,26 @@
-MySQL5.7 ¸´ÖÆÊµÕ½
+MySQL5.7 å¤åˆ¶å®æˆ˜
 
-MySQL¸´ÖÆ»ù´¡
-ÈçºÎÊµÏÖ»ùÓÚÈÕÖ¾µãµÄ¸´ÖÆ
-ÈçºÎÔÚÏß±ä¸ü¸´ÖÆÀàĞÍ
-ÈçºÎÊ¹ÓÃ¶àmaster¸´ÖÆ
-ÈçºÎÊ¹ÓÃ¶àÏß³Ì¸´ÖÆ
+MySQLå¤åˆ¶åŸºç¡€
+å¦‚ä½•å®ç°åŸºäºæ—¥å¿—ç‚¹çš„å¤åˆ¶
+å¦‚ä½•åœ¨çº¿å˜æ›´å¤åˆ¶ç±»å‹
+å¦‚ä½•ä½¿ç”¨å¤šmasterå¤åˆ¶
+å¦‚ä½•ä½¿ç”¨å¤šçº¿ç¨‹å¤åˆ¶
 
-MySQL¸´ÖÆ»ù´¡
-MySQLµÄ¸´ÖÆÊÇÒì²½¸´ÖÆ
-MySQLµÄ¸´ÖÆÊÇ»ùÓÚBinLogÈÕÖ¾
-´æÔÚÈıÖÖÈÕÖ¾¸ñÊ½
-Statement BinLogÖĞ´æ´¢SQLÓï¾ä ´æ´¢ÈÕÖ¾Á¿ÊÇ×îĞ¡µÄ    
-Row ´æ´¢eventÊı¾İ ´æ´¢ÈÕÖ¾Á¿´ó µ«ÊÇ²»ÄÜºÜÖ±½ÓµÄ½øĞĞ¶ÁÈ¡
-Mixed ½éÓÚRowºÍStatementÖ®¼ä ¶ÔÓÚ²»È·¶¨µÄ²Ù×÷Ê¹ÓÃRow¼ÇÂ¼ Èç¹ûÃ¿ÌìÊı¾İ²Ù×÷Á¿ºÜ´ó
-²úÉúµÄÈÕÖ¾±È½Ï¶à ¿ÉÒÔ¿¼ÂÇÑ¡ÔñÊ¹ÓÃmixed¸ñÊ½
+MySQLå¤åˆ¶åŸºç¡€
+MySQLçš„å¤åˆ¶æ˜¯å¼‚æ­¥å¤åˆ¶
+MySQLçš„å¤åˆ¶æ˜¯åŸºäºBinLogæ—¥å¿—
+å­˜åœ¨ä¸‰ç§æ—¥å¿—æ ¼å¼
+Statement BinLogä¸­å­˜å‚¨SQLè¯­å¥ å­˜å‚¨æ—¥å¿—é‡æ˜¯æœ€å°çš„    
+Row å­˜å‚¨eventæ•°æ® å­˜å‚¨æ—¥å¿—é‡å¤§ ä½†æ˜¯ä¸èƒ½å¾ˆç›´æ¥çš„è¿›è¡Œè¯»å–
+Mixed ä»‹äºRowå’ŒStatementä¹‹é—´ å¯¹äºä¸ç¡®å®šçš„æ“ä½œä½¿ç”¨Rowè®°å½• å¦‚æœæ¯å¤©æ•°æ®æ“ä½œé‡å¾ˆå¤§
+äº§ç”Ÿçš„æ—¥å¿—æ¯”è¾ƒå¤š å¯ä»¥è€ƒè™‘é€‰æ‹©ä½¿ç”¨mixedæ ¼å¼
 
-MySQL¸´ÖÆ¿ÉÊÇ¶ÔÕû¸öÊµÀı½øĞĞ¸´ÖÆ Ò²¿ÉÒÔ¶ÔÊµÀıÖĞµÄÄ³¸ö¿â»òÊÇÄ³¸ö±í½øĞĞ¸´ÖÆ
-Master¶Ë
+MySQLå¤åˆ¶å¯æ˜¯å¯¹æ•´ä¸ªå®ä¾‹è¿›è¡Œå¤åˆ¶ ä¹Ÿå¯ä»¥å¯¹å®ä¾‹ä¸­çš„æŸä¸ªåº“æˆ–æ˜¯æŸä¸ªè¡¨è¿›è¡Œå¤åˆ¶
+Masterç«¯
 --binlog-do-db
 --binlog-ignore-db
 
-Slave¶Ë
+Slaveç«¯
 --replicate-do-db
 --replicate-ignore-db
 --replicate-do-table
@@ -28,15 +28,15 @@ Slave¶Ë
 --replicate-wild-do-table
 --replicate-wild-ignore-table
 
-´æÔÚÁ½ÖÖ¸´ÖÆÀàĞÍ
-»ùÓÚ¶ş½øÖÆÈÕÖ¾µÄ¸´ÖÆ
-Ê¹ÓÃGTIDÍê³É»ùÓÚÊÂÎñµÄ¸´ÖÆ
-MySQLÖ§³Ö°ëÍ¬²½¸´ÖÆ
+å­˜åœ¨ä¸¤ç§å¤åˆ¶ç±»å‹
+åŸºäºäºŒè¿›åˆ¶æ—¥å¿—çš„å¤åˆ¶
+ä½¿ç”¨GTIDå®ŒæˆåŸºäºäº‹åŠ¡çš„å¤åˆ¶
+MySQLæ”¯æŒåŠåŒæ­¥å¤åˆ¶
 
-ÈçºÎÊµÏÖ»ùÓÚÈÕÖ¾µãµÄ¸´ÖÆ
-ÔÚmaster¶Ë½¨Á¢¸´ÖÆÓÃ»§
-±¸·İmaster¶ËµÄÊı¾İ ²¢ÔÚslave¶Ë»Ö¸´
-Ê¹ÓÃchange master ÃüÁîÅäÖÃ¸´ÖÆ
+å¦‚ä½•å®ç°åŸºäºæ—¥å¿—ç‚¹çš„å¤åˆ¶
+åœ¨masterç«¯å»ºç«‹å¤åˆ¶ç”¨æˆ·
+å¤‡ä»½masterç«¯çš„æ•°æ® å¹¶åœ¨slaveç«¯æ¢å¤
+ä½¿ç”¨change master å‘½ä»¤é…ç½®å¤åˆ¶
 
 grant replication slave on *.* to 'dba'@'192.168.3.%' identified by '123456'
 show warnings;
@@ -56,20 +56,20 @@ cd /tmp
 mysqldump --single-transaction --master-data=2 --triggers --routines --all-databases -uroot -p > all.sql
 scp all.sql root@192.168.3.101:/tmp
 
-ÈçºÎÔÚÏß½«»ùÓÚÈÕÖ¾µÄ¸´ÖÆ±ä¸üÎª»ùÓÚÊÂÎñµÄ¸´ÖÆ
-´¦Àí²½Öè
+å¦‚ä½•åœ¨çº¿å°†åŸºäºæ—¥å¿—çš„å¤åˆ¶å˜æ›´ä¸ºåŸºäºäº‹åŠ¡çš„å¤åˆ¶
+å¤„ç†æ­¥éª¤
 show status like 'ongoing_anonymous_transaction_count';
 set @@global.gtid_mode=on;
 stop slave;
 change master to master_auto_position=1;
 start slave;
 
-ÈçºÎÔÚÏß½«»ùÓÚÊÂÎñµÄ¸´ÖÆ±ä¸üÎª»ùÓÚÈÕÖ¾µÄ¸´ÖÆ
-ÏÈ¾öÌõ¼ş
-¼¯ÈºÖĞËùÓĞ·şÎñÆ÷µÄ°æ±¾¾ù¸ßÓÚ5.7.6
-¼¯ÈºÖĞËùÓĞ·şÎñÆ÷gtid_mode¶¼ÉèÎªon
+å¦‚ä½•åœ¨çº¿å°†åŸºäºäº‹åŠ¡çš„å¤åˆ¶å˜æ›´ä¸ºåŸºäºæ—¥å¿—çš„å¤åˆ¶
+å…ˆå†³æ¡ä»¶
+é›†ç¾¤ä¸­æ‰€æœ‰æœåŠ¡å™¨çš„ç‰ˆæœ¬å‡é«˜äº5.7.6
+é›†ç¾¤ä¸­æ‰€æœ‰æœåŠ¡å™¨gtid_modeéƒ½è®¾ä¸ºon
 
-´¦Àí²½Öè
+å¤„ç†æ­¥éª¤
 stop slave;
 change master to master_auto_position=0
 ,master_log_file='file',master_log_pos=position
@@ -79,8 +79,8 @@ set @@global.gtid_mode=off_permissive;
 select @@global.gtid_mode_owned;
 set @@global.gtid_mode=off;
 
-ÈçºÎÊ¹ÓÃ¶àÔ´¸´ÖÆ
-¶àÔ´¸´ÖÆÒ²¾ÍÊÇ¶àMaster¸´ÖÆ ÔÊĞíÒ»¸öSlave¶ÔÓ¦¶Ô¶à¸öMaster
+å¦‚ä½•ä½¿ç”¨å¤šæºå¤åˆ¶
+å¤šæºå¤åˆ¶ä¹Ÿå°±æ˜¯å¤šMasterå¤åˆ¶ å…è®¸ä¸€ä¸ªSlaveå¯¹åº”å¯¹å¤šä¸ªMaster
 
 change master to option
 option
@@ -98,7 +98,7 @@ master_log_pos=master_log_pos
 
 channel_option: for channel 
 
-ÊµÀı
+å®ä¾‹
 ip addr
 mysql -uroot -p
 show variables like 'gtid_mode';
@@ -110,7 +110,7 @@ insert into t3 values(1,'aa','bb'),(2,'cc','dd');
 select * from t3;
 create user dba@'192.168.3.%' identified by '123456';
 grant replication slave on *.* to dba@'192.168.3.%';
-change master to master_host=¡®192.168.3.102¡¯,
+change master to master_host=â€˜192.168.3.102â€™,
 master_user='dba',
 master_password='123456',
 master_auto_position=1 for channel 'N3';
@@ -127,8 +127,8 @@ show tables like 'replication%';
 select * from replication_applier_configuration;
 select * form replication_applier_status \g;
 
-ÈçºÎÊ¹ÓÃ¶à³Ì¸´ÖÆ
-ÔÚslave·şÎñÆ÷ÉÏÍ£Ö¹ËùÓĞÁ´Â·µÄ¸´ÖÆ
+å¦‚ä½•ä½¿ç”¨å¤šç¨‹å¤åˆ¶
+åœ¨slaveæœåŠ¡å™¨ä¸Šåœæ­¢æ‰€æœ‰é“¾è·¯çš„å¤åˆ¶
 set global slave_parallel_type='logical_clock';
 set global slave_parallel_workers=4;
 start slave;
