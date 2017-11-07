@@ -29,12 +29,24 @@ why 不同MySQL版本的优化器有一定的差别
 如何发现有问题的SQL
 使用MySQL慢查询日志对有效率问题的SQL进行监控
 show variables like 'slow_query_log'
++----------------+-------+
+| Variable_name  | Value |
++----------------+-------+
+| slow_query_log | OFF   |
++----------------+-------+
 set global slow_query_log_file='/home/mysql/sql_log/mysql-slow.log'
 set global log_queries_not_using_indexes=on;
 set global long_query_time=1
 
 show variables like 'slow_query_log';
 show variables like '%log%';
+mysql> show variables like 'slow_query_log%';
++---------------------+---------------------------------------+
+| Variable_name       | Value                                 |
++---------------------+---------------------------------------+
+| slow_query_log      | OFF                                   |
+| slow_query_log_file | /var/lib/mysql/ak-Vostro-230-slow.log |#慢查询日志文件目录
++---------------------+---------------------------------------+
 set global log_queries_not_using_indexes=on;
 show variables like 'long_query_time';
 set global slow_query_log=on;
