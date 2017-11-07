@@ -29,12 +29,24 @@ why 不同MySQL版本的优化器有一定的差别
 如何发现有问题的SQL
 使用MySQL慢查询日志对有效率问题的SQL进行监控
 show variables like 'slow_query_log'
++----------------+-------+
+| Variable_name  | Value |
++----------------+-------+
+| slow_query_log | OFF   |
++----------------+-------+
 set global slow_query_log_file='/home/mysql/sql_log/mysql-slow.log'
 set global log_queries_not_using_indexes=on;
 set global long_query_time=1
 
 show variables like 'slow_query_log';
 show variables like '%log%';
+mysql> show variables like 'slow_query_log%';
++---------------------+---------------------------------------+
+| Variable_name       | Value                                 |
++---------------------+---------------------------------------+
+| slow_query_log      | OFF                                   |
+| slow_query_log_file | /var/lib/mysql/ak-Vostro-230-slow.log |#慢查询日志文件目录
++---------------------+---------------------------------------+
 set global log_queries_not_using_indexes=on;
 show variables like 'long_query_time';
 set global slow_query_log=on;
@@ -171,14 +183,14 @@ create table test(
 	name varchar(10) not null,
 	title varchar(50) not null,
 	unique(id)
-)engine=innodb;
+)engine=innodb default charset=utf8 comment '' ;
 冗余索引是指多个索引的前缀列相同 或是在联合索引中包含了主键的索引 下面这个例子中key(name,id)就是一个冗余索引
 create table test(
     id int not null primary key,
 	name varchar(10) not null,
 	title varchar(50) not null,
 	key(name,id)
-)engine=innodb;
+)engine=innodb default charset=utf8 comment '';
 索引的维护及优化 --- 查找重复及冗余索引
 select a.table_schema as '数据名'
 ,a.table_name as '表名'
@@ -216,7 +228,7 @@ mysql-slow.log
 create table test(id int auto_increment not null,
 timestr int,
 primary key(id)
-)engine=innodb default charset=utf8:
+)engine=innodb default charset=utf8 comment '':
 insert into test(timestr) values(unix_timestamp('2014-06-01 13:12:00'));
 select from_unixtime(timestr) from test;
 
@@ -224,7 +236,7 @@ select from_unixtime(timestr) from test;
 create table sessions(id int auto_increment not null,
 ipaddress bigint,
 primary key(id)
-)engine=innodb default charset=utf8;
+)engine=innodb default charset=utf8 comment '';
 insert into sessions(ipaddress) values(inet_aton("192.168.0.1"));
 select inet_ntoa(ipaddress) from sessions;
 
@@ -286,7 +298,7 @@ rating varchar(5) default 'g',
 special_features varchar(10) default null,
 last_update timestamp,
 primary key(`film_id`)
-);
+) engine=innodb default charset=utf8 comment '';
 拆分后
 create table film(
 film_id smallint(5) unsigned not null auto_increment,
@@ -301,14 +313,14 @@ rating varchar(5) default 'G',
 special_features varchar(10) default null,
 last_update timestamp,
 primary key(film_id)
-);
+)engine=innodb default charset=utf8 comment '';
 附加表
 create table file_text(
 film_id smallint(5) unsigned not null,
 title varchar(255) not null,
 description text,
 primary key(film_id)
-)engine=innodb;
+)engine=innodb default charset=utf8 comment '';
 
 表的水平拆分
 表的水平拆分是为了解决单表的数据量过大的问题 水平拆分的表每一个表的结构都是完成一致的
@@ -322,7 +334,7 @@ amount decimal(5,2) not null,
 payment_date datetime not null,
 last_update timestamp,
 primary key(`payment_id`)
-)engine=innodb default charset=utf8;
+)engine=innodb default charset=utf8 comment '';
 
 常用的水平拆分方法为
 1.对customer_id进行hash运算 如果要拆分成五个表则使用mod(customer_id,5)取出0-4个值

@@ -277,7 +277,7 @@ create table customer(
 cust_id int auto_increment not null comment '自增ID',
 cust_name varchar(10) not null comment '客户姓名',
 primary key(cust_id)
-)comment '客户表';
+)engine=innodb default charset=utf8 comment '客户表';
 3.导出数据字典
 select a.table_name,b.table_comment,a.column_name,a.column_type,
 a.column_commentfrom information_schema.columns a join information_schema.tables b
