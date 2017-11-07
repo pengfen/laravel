@@ -39,7 +39,7 @@ col_name data_type [generated always] as (expression) [virtual|stored]
 drop table t;
 drop table vw_t
 show triggers;
-create table t (id int auto_increment not null,c1 int,c2 int,c3 int as (c1+c2),primary key(id));
+create table t (id int auto_increment not null,c1 int,c2 int,c3 int as (c1+c2),primary key(id))engine=innodb default charset=utf8 comment '';
 show create table t;
 insert into t(c1,c2) values(1,2);
 update t set c1=5 where id=1;
@@ -54,7 +54,7 @@ MySQL5.7之后
 select json_array('a','b',now());
 select json_object('key1',1,'key2',2);
 
-create table t1 (jdoc json);
+create table t1 (jdoc json) engine=innodb default charset=utf8 comment '';
 show create table t1;
 insert into t1(jdoc) values(json_array('a','b',now());
 

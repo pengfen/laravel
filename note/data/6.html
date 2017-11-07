@@ -337,7 +337,7 @@ password char(32) not null comment 'md5加密的密码',
 user_stats tinyint not null default 1 comment '用户状态',
 modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
 primary key pk_customerid(customer_id)
-)engine=innodb comment='用户登录表';
+)engine=innodb default charset=utf8 comment='用户登录表';
 
 用户信息表(customer_inf)
 create table customer_inf(
@@ -356,7 +356,7 @@ customer_level tinyint not null default 1 comment '会员级别 1 普通会员 2
 user_money decimal(8,2) not null default 0.00 comment '用户余额',
 modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
 primary key pk_customerinfid(customer_inf_id)
-)engine=innodb comment '用户信息表';
+)engine=innodb default charset=utf8 comment '用户信息表';
 
 用户级别表 (customer_level_inf)
 create tabLe customer_level_inf(

@@ -49,7 +49,7 @@ grant replication slave on *.* to dba@'192.168.3.%';
 show databases;
 create database dba;
 use dba;
-create table t(id int, cl varchar(10), primary key(id));
+create table t(id int, cl varchar(10), primary key(id)) engine=innodb default charset=utf8 comment '';
 insert into t(1,'aa'),(2,'bb'),(3,'cc');
 select * from t;
 cd /tmp
@@ -104,7 +104,7 @@ mysql -uroot -p
 show variables like 'gtid_mode';
 create database N3;
 use N3
-create table t3(id int,c1 varchar(10),c3 varchar(10),primary key(id));
+create table t3(id int,c1 varchar(10),c3 varchar(10),primary key(id)) engine=innodb default charset=utf8 comment '';
 show create table t3;
 insert into t3 values(1,'aa','bb'),(2,'cc','dd');
 select * from t3;
