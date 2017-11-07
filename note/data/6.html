@@ -53,13 +53,13 @@ create table customer_inf(
 	customer_name varchar(20) not null comment '用户真实姓名',
 	identity_card_type tinyint not null default 1 comment '证件类型:"
 	identity_card_no varchar(20) comment '证件号码'
-)
+) engine=innodb default charset=utf8 comment '用户信息表';
 create table order_master(
     order_id int unsigned not null AUTO_INCREMENT comment '订单ID‘，
 	order_sn bigint unsigned not null comment '订单编号',
 	shipping_user varchar(10) not null comment '收货人姓名'
 	province smallint not null comment '收货人所在省'
-)
+)engine=innodb default charset=utf8 comment '订单信息表';
 
 数据库命名规范总结
 所有数据库对象名称必须小写
@@ -366,7 +366,7 @@ min_point int unsigned not null default 0 comment '该级别最低积分',
 max_point int unsigned not null default 0 comment '该级别最高积分',
 modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
 primary key pk_levelid (customer_level)
-)engine=innodb comment '用户级别信息表';
+)engine=innodb default charset=utf8 comment '用户级别信息表';
 
 用户地址表 (customer_addr)
 create tabLe customer_addr(
@@ -380,7 +380,7 @@ address varchar(200) not null comment '具体的地址门牌号',
 is_default tinyint not null comment '是否默认',
 modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
 primary key pk_customeraddid(customer_addr_id)
-)engine=innodb comment '用户地址表';
+)engine=innodb default charset=utf8 comment '用户地址表';
 
 用户积分日志表 (customer_point_log)
 create tabLe customer_point_log(
@@ -391,7 +391,7 @@ refer_number int unsigned not null default 0 comment '积分来源相关编号',
 change_point smallint not null default 0 comment '变更积分数',
 create_time timestamp not null comment '积分日志生成时间',
 primary key pk_pointid(point_id)
-)engine=innodb comment '用户积分日志表';
+)engine=innodb default charset=utf8 comment '用户积分日志表';
 
 用户余额变动表 (customer_balance_log)
 create table customer_balance_log(
@@ -401,7 +401,7 @@ source tinyint unsigned not null default 1 comment '记录来源 1 订单 2 退�
 source_sn int unsigned not null comment '相关单据ID',
 create_time timestamp not null default current_timestamp not null default 0.00 comment '变动金额',
 primary key pk_balanceid (balance_id)
-)engine=innodb comment '用户余额变动表';
+)engine=innodb default charset=utf8 comment '用户余额变动表';
 
 用户登录日志表 (customer_login_log)
 create table customer_login_log(
@@ -411,5 +411,5 @@ login_time timestamp not null comment '用户登录时间',
 login_ip int unsigned not null comment '登录IP',
 login_type tinyint not null comment '登录类型 0 未成功 1 成功',
 primary key pk_loginid(login_id)
-)engine=innodb comment '用户登录日志表';
+)engine=innodb default charset=utf8 comment '用户登录日志表';
 
