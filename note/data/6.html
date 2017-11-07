@@ -413,3 +413,23 @@ login_type tinyint not null comment '登录类型 0 未成功 1 成功',
 primary key pk_loginid(login_id)
 )engine=innodb comment '用户登录日志表';
 
+谨慎使用MySQL分区表
+分区表在物理上表现为多个文件 在逻辑上表现为一个表
+谨慎选择分区键 跨分区查询效率可能更低
+建议采用物理分表的方式管理大数据
+
+MySQL分区表
+确认MySQL服务器是否支持分区表
+show plugins;
+partition active storage engine
+
+在逻辑上为一个表 在物理上存储在多个文件中
+用户登录日志表 (customer_login_log)
+create table customer_login_log(
+login_id int unsigned not null auto_increment comment '登录日志ID',
+customer_id int unsigned not null comment '登录用户ID',
+login_time timestamp not null comment '用户登录时间',
+login_ip int unsigned not null comment '登录IP',
+login_type tinyint not null comment '登录类型 0 未成功 1 成功',
+primary key pk_loginid(login_id)
+)engine=innodb comment '用户登录日志表';
