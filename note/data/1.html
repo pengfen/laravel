@@ -173,8 +173,24 @@ mysql> select over from user1 where user_name='孙悟空';
 
 使用Join优化子查询
 select a.user_name,a.over,(select over from user2 b where a.user_name=b.user_name) as over2 from user1 a;
++-----------+--------------+--------+
+| user_name | over         | over2  |
++-----------+--------------+--------+
+| 唐僧      | 功德佛       | NULL   |
+| 猪八戒    | 净坛使者     | NULL   |
+| 孙悟空    | 齐天大圣     | 成佛   |
+| 沙僧      | 金身罗汉     | NULL   |
++-----------+--------------+--------+
 优化后
-select a.user_name,a.over,b.over as over2 from user1 b on a.user_name=b.user_name
+select a.user_name,a.over,b.over as over2 from user1 a left join b on a.user_name=b.user_name
++-----------+--------------+--------+
+| user_name | over         | over2  |
++-----------+--------------+--------+
+| 孙悟空    | 齐天大圣     | 成佛   |
+| 唐僧      | 功德佛       | NULL   |
+| 猪八戒    | 净坛使者     | NULL   |
+| 沙僧      | 金身罗汉     | NULL   |
++-----------+--------------+--------+
 
 使用join优化聚合子查询
 引入一张新表 按日期记录四人组中每个人打怪的数量
