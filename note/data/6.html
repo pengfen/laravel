@@ -548,3 +548,211 @@ alter table arch_customer_login_log engine=archive;
 对分区表进行查询最好在where从句中包含分区键
 具有主键或唯一索引的表 主键或唯一索引必须是分区键的一部分
 
+商品实体
+商品名称 国条码 分类 品牌名称 供应商 销售价格 重量 长度 宽度 高度 图片信息 描述 生产时间 有效期 颜色 上下架状态 成本
+品牌信息表(brand_info)
+create table brand_info(
+brind_id smallint unsigned auto_increment not null comment '品牌ID',
+brand_name varchar(50) not null comment '品牌名称',
+telephone varchar(50) not null comment '联系电话',
+brand_web varchar(100) comment '品牌网站',
+brand_logo varchar(100) comment '品牌logo url',
+brand_desc varchar(150) comment '品牌描述',
+brand_status tinyint not null default 0 comment '品牌状态 0 禁用 1 启用',
+brand_order tinyint not null default 0 comment '排字',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_brandid(brand_id)
+)engine=innodb default charset=utf8 comment '品牌信息表';
+
+分类信息表(product_category)
+create table product_category(
+category_id smallint unsigned auto_increment not null comment '分类ID',
+category_name varchar(10) not null comment '分类名称',
+category_code varchar(10) not null comment '分类编码',
+parent_id smallint unsigned not null default 0 comment '父分类ID',
+category_level tinyint not null default 1 comment '分类层级',
+category_status tinyint not null default 1 comment '分类状态',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_categoryid (category_id)
+) engine=innodb default charset=utf8 comment '商品分类表';
+
+供应商信息表(supplier_info)
+create table supplier_info(
+supplier_id int unsigned auto_increment not null comment '供应商ID',
+supplier_code char(8) not null comment '供应商编码',
+supplier_name char(50) not null comment '供应商名称',
+supplier_type tinyint not null comment '供应商类型 1 自营 2 平台',
+link_man varchar(10) not null comment '供应商联系人',
+phone_number varchar(50) not null comment '联系电话',
+bank_name varchar(50) not null comment '供应商开户银行名称',
+bank_account varchar(50) not null comment '银行账号',
+address varchar(200) not null default '0' comment '状态 0 禁用 1 启用',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_supplierid (supplier_id)
+) engine=innodb default charset=utf8 comment '供应商信息表';
+
+商品信息表(product_info)
+create table product_info(
+product_id int unsigned auto_increment not null comment '商品ID',
+product_code char(16) not null comment '商品编码',
+product_name varchar(20) not null comment '商品名称',
+bar_code varchar(50) not null comment '国条码',
+one_category_id smallint unsigned not null comment '一级分类ID',
+two_category_id smallint unsigned not null comment '二级分类ID',
+three_category_id smallint unsigned not null comment '三级分类ID',
+supplier_id int unsigned not null comment '商品的供应商id',
+price decimal(8,2) not null comment '商品销售价格',
+average_cost decimal(18,2) not null comment '商品加权平均成本',
+publish_status tinyint not null default 0 comment '上下架状态 0 下架 1 上架',
+audit_status tinyint not null default 0 comment '审核状态 0 未审核 1 已审核',
+weight float comment '商品重量',
+length float comment '商品长度',
+height float comment '商品高度',
+width float comment '商品宽度',
+color_type enum('红','黄','蓝','黑'),
+production_date datetime not null comment '生产日期',
+shelf_life int not null comment '商品有效期',
+descript text not null comment '商品描述',
+indate timestamp not null default CURRENT_TIMESTAMP comment '商品录入时间',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_productid (product_id)
+) engine=innodb default charset=utf8 comment '商品信息表';
+
+商品图片表(product_pic_info)
+create table product_pic_info(
+product_pic_id int unsigned auto_increment not null comment '商品图片ID',
+product_id int unsigned not null comment '商品ID',
+pic_desc varchar(50) comment '图片描述',
+pic_url varchar(200) not null comment '图片url',
+is_master tinyint not null default 0 comment '是否主图 0 非主图 1 主图',
+pic_order tinyint not null default 0 comment '图片排序',
+pic_status tinyint not null default 1 comment '图片是否有效 0 无效 1 有效',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_picid (product_pic_id)
+) engine=innodb default charset=utf8 comment '商品图片信息表';
+
+商品评论表 (product_comment)
+create table product_comment(
+comment_id int unsigned auto_increment not null comment '评论ID',
+product_id int unsigned not null comment '商品ID',
+order_id bigint unsigned not null comment '订单ID',
+customer_id int unsigned not null comment '用户ID',
+title varchar(50) not null comment '评论标题',
+content varchar(300) not null comment '评论内容',
+audit_status tinyint not null comment '审核状态 0 未审核 1 已审核',
+audit_time timestamp not null comment '评论时间',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_commentid (customer_id)
+) engine=innodb default charset=utf8 comment '商品评论表';
+
+订单实体
+下单用户 收货人 支付方式 支付金额 优惠金额 省 市 区 地址 邮编 订单商品 支付时间 收货时间 状态 下单时间 手机号 订单积分 物流信息 运费
+订单商品 商品数量 商品名称 商品价格 仓库信息
+仓库信息 名称 电话 联系人 地址
+
+订单主表(order_master)
+create table order_master(
+order_id int unsigned not null auto_increment comment '订单ID',
+order_sn bigint unsigned not null comment '订单编号 yyyymmddnnnnnnnn',
+customer_id int unsigned not null comment '下单人ID',
+shipping_user varchar(10) not null comment '收货人姓名',
+province smallint not null comment '省',
+city smallint not null comment '市',
+district smallint not null comment '区',
+address varchar(100) not null comment '地址',
+payment_method tinyint not null comment '支付方式 1 现金 2 余额 3 网银 4 支付宝 5 微信',
+order_money decimal(8,2) not null comment '订单金额',
+district_money decimal(8,2) not null default 0.00 comment '优惠金额',
+shipping_money decimal(8,2) not null default 0.00 comment '运费金额',
+payment_money decimal(8,2) not null default 0.00 comment '支付金额',
+shipping_comp_name varchar(10) comment '快递公司名称',
+shipping_sn varchar(50) comment '快递单号',
+create_time timestamp not null default CURRENT_TIMESTAMP comment '下单时间',
+shipping_time datetime comment '发货时间',
+pay_time datetime comment '支付时间',
+receive_time datetime comment '收货时间',
+order_status tinyint not null default 0 comment '订单状态',
+order_point int unsigned not null default 0 comment '订单积分',
+invoice_title varchar(100) comment '发票抬头',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_orderid(order_id)
+) engine=innodb default charset=utf8 comment '订单主表';
+
+订单详情表 (order_detail)
+create table order_detail(
+order_detail_id int unsigned not null auto_increment comment '订单详情表ID',
+order_id int unsigned not null comment '订单表ID',
+product_id int unsigned not null comment '订单商品ID',
+product_name varchar(50) not null comment '商品名称',
+product_cnt int not null default 1 comment '购买商品数量',
+product_price decimal(8,2) not null comment '购买商品单价',
+average_cost decimal(8,2) not null default 0.00 comment '平均成本价格',
+weight float comment '商品重量',
+fee_money decimal(8,2) not null default 0.00 comment '优惠分摊金额',
+w_id int unsigned not null comment '仓库ID',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_orderdetailid (order_detail_id)
+) engine=innodb default charset=utf8 comment '订单详情表';
+
+购物车表 (order_cart)
+create table order_cart(
+cart_id int unsigned not null auto_increment comment '购物车ID',
+customer_id int unsigned not null comment '用户ID',
+product_id int unsigned not null comment '商品ID',
+product_amount int not null comment '加入购物车商品数量',
+price decimal(8,2) not null comment '商品价格',
+add_time timestamp not null default CURRENT_TIMESTAMP comment '加入购物车时间',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_cartid (cart_id)
+) engine=innodb default charset=utf8 comment '购物车表';
+
+仓库信息表 (warehouse_info)
+create table warehouse_info(
+w_id smallint unsigned not null auto_increment comment '仓库ID',
+warehouse_sn char(5) not null comment '仓库编码',
+warehouse_name varchar(10) not null comment '仓库名称',
+warehouse_phone varchar(20) not null comment '仓库电话',
+contact varchar(10) not null comment '仓库联系人',
+province smallint not null comment '省',
+city smallint not null comment '市',
+district smallint not null comment '区',
+address varchar(100) not null comment '仓库地址',
+warehouse_status tinyint not null default 1 comment '仓库状态 0 禁用 1 启用',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_wid(w_id)
+) engine=innodb default charset=utf8 comment '仓库信息表';
+商品库存表 (warehouse_product)
+create table warehouse_product(
+wp_id int unsigned not null auto_increment comment '商品库存ID',
+product_id int unsigned not null comment '商品ID',
+w_id smallint unsigned not null comment '仓库ID',
+current_cnt int unsigned not null default 0 comment '当前商品数量',
+lock_cnt int unsigned not null default 0 comment '当前占用数据',
+in_transit_cnt int unsigned not null default 0 comment '在途数据',
+average_cost decimal(8,2) not null default 0.00 comment '移动加权成本',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_wpid (wp_id)
+) engine=innodb default charset=utf8 comment '商品库存表';
+
+物流公司信息表 (shipping_info)
+create table shipping_info(
+ship_id tinyint unsigned not null auto_increment comment '主键ID',
+ship_name varchar(20) not null comment '物流公司名称',
+ship_contact varchar(20) not null comment '物流公司联系人',
+telphone varchar(20) not null comment '物流公司联系电话',
+price decimal(8,2) not null default 0.00 comment '配送价格',
+modified_time timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '最后修改时间',
+primary key pk_shipid(ship_id)
+) engine=innodb default charset=utf8 comment '物流公司信息表';
+
+DB规划
+为以后数据库迁移提供方便
+避免跨库操作 把经常一起关联查询的表放在一个DB中
+为了方便识别表所在的DB 在表名前增加库名前缀
+
+用户数据库(mc_customerdb)
+customer_inf customer_login customer_login_log customer_level_inf customer_point_log customer_balance_log
+商品数据库(mc_productdb)
+product_info product_pic_info product_category product_supplier_info product_comment product_brand_info
+订单数据库 (mc_orderdb)
+order_master order_detail order_customer_addr shipping_info order_cart warehouse_info warehouse_product
