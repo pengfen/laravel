@@ -205,10 +205,10 @@ id  user_id  timestr              kills
 8   2        2013-02-12 00:00:00  10
 9   2        2013-02-07 00:00:00  17
 create table user_kills(
-    id int unsigned auto_increment primary key comment '自增ID',
-	user_id int not null default 0 comment '用户id(user1)',
-	timestr date comment '打怪日期',
-	kills int unsigned not null default 0 comment '打怪数量'
+id int unsigned auto_increment primary key comment '自增ID',
+user_id int not null default 0 comment '用户id(user1)',
+timestr date comment '打怪日期',
+kills int unsigned not null default 0 comment '打怪数量'
 ) engine=innodb default charset=utf8 comment = '打怪数量表';
 insert into user_kills(user_id,timestr,kills) values(2, '2013-01-10 00:00:00', 10),(2, '2013-02-01 00:00:00', 2),
 (2, '2013-02-05 00:00:00', 12),(4, '2013-01-10 00:00:00', 3),(2, '2013-02-11 00:00:00', 5),
@@ -218,6 +218,12 @@ insert into user_kills(user_id,timestr,kills) values(2, '2013-01-10 00:00:00', 1
 如何查询出四人组中打怪最多的日期
 select a.user_name,b.timestr,b.kills from user1 a join user_kills b on a.id = b.user_id where b.kills =
 (select max(c.kills) from user_kills c where c.user_id=b.user_id)
++-----------+------------+-------+
+| user_name | timestr    | kills |
++-----------+------------+-------+
+| 沙僧      | 2013-01-10 |     3 |
+| 猪八戒    | 2013-02-07 |    17 |
++-----------+------------+-------+
 优化后
 select a.user_name,b.timestr,b.kills from user1 a join user_kills b on a.id = b.user_id
 group by a.user_name,b.timestr,b.kills having b.kills = max(c.kills)
