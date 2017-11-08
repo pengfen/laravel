@@ -1,0 +1,44 @@
+* * * * * 分时日月周
+*/2 每二
+8-11 8至11
+8,11 8 11
+
+每一分钟执行一次command（因cron默认每1分钟扫描一次，因此全为*即可）
+*    *    *    *    *  command
+*/2 * * * * 每二分钟    */10 * * * * 每十分钟
+
+每小时的第3和第15分钟执行command
+3,15   *    *    *    *  command
+
+每天上午8-11点的第3和15分钟执行command：
+3,15  8-11  *  *  *  command
+
+每隔2天的上午8-11点的第3和15分钟执行command：
+3,15  8-11  */2  *   *  command
+
+每个星期一的上午8点到11点的第3和第15分钟执行command
+3,15  8-11   *   *  1 command
+
+每晚的21:30重启smb
+30  21   *   *  *  /etc/init.d/smb restart
+
+每月1、10、22日的4 : 45重启smb
+45  4  1,10,22  *  *  /etc/init.d/smb restart
+
+每周六、周日的1 : 10重启smb
+10  1  *  *  6,0  /etc/init.d/smb restart
+
+每天18 : 00至23 : 00之间每隔30分钟重启smb
+0,30  18-23  *  *  *  /etc/init.d/smb restart
+
+每一小时重启smb
+*  */1  *  *  *  /etc/init.d/smb restart
+
+晚上11点到早上7点之间，每隔一小时重启smb
+*  23-7/1  *   *   *  /etc/init.d/smb restart
+
+每月的4号与每周一到周三的11点重启smb
+0  11  4  *  mon-wed  /etc/init.d/smb restart
+
+每小时执行/etc/cron.hourly目录内的脚本
+0  1   *   *   *     root run-parts /etc/cron.hourly
