@@ -34,6 +34,8 @@ $table->index()
 $table->unique()
 $table->primary()
 
+$table->dropUnique(); //删除唯一键
+
 $table->comment = ''; // try once test
 
     Schema::dropIfExists('article');
