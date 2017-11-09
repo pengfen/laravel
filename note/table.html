@@ -36,6 +36,8 @@ $table->primary()
 
 $table->dropUnique(); //删除唯一键
 
+$table->dropColumn('comment'); // 删除某字段
+
 $table->comment = ''; // try once test
 
     Schema::dropIfExists('article');
