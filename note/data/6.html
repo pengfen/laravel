@@ -756,3 +756,102 @@ customer_inf customer_login customer_login_log customer_level_inf customer_point
 product_info product_pic_info product_category product_supplier_info product_comment product_brand_info
 订单数据库 (mc_orderdb)
 order_master order_detail order_customer_addr shipping_info order_cart warehouse_info warehouse_product
+
+如何对评论进行分页展示
+explain select customer_id,title,content from product_comment where audit_status=1 and product_id=199726 limit 0,5;
+
+执行计划分析
+执行计划能告诉我们什么
+SQL如何使用索引
+联接查询的执行顺序
+查询扫描的数据行数
+
+执行计划中的内容
+ID列 ID列中的数据为一组数字 表示执行select语句的顺序
+ID值相同时 执行顺序由上至下
+ID值越大优先级越高 越先被执行
+
+explain select c.category_name,a.product_name,b.title from product_info a
+join product_comment b on a.product_id=b.product_id 
+join product_category c on c.category_id=a.one_category_id;
+
+explain select title from product_comment where product_id in (
+select max(product_id) from product_info where one_category_id in (
+select min(category_id) from product_category
+));
+id  select_type         table
+1   primary             product_comment
+2   subquery            product_info
+3   dependent subquery
+
+select_type列
+值 含义
+simple  不包含子查询或是union操作的查询
+primary  查询中如果包含任何子查询 那么最外层的查询则被标记为primary
+subquery  select列表中的子查询
+dependent subquery  依赖外部结果的子查询
+union  union操作的第二个或是之后的查询的值为union
+dependent union  不union做为子查询时 第二或是第二个后的查询的select_type值
+union result  union产生的结果集
+derived  出现在from子句中的子查询
+
+table列
+输出数据行所在的表的名称
+<unionM,N>由ID为M,N查询union产生的结果集
+<derivedN>/<subqueryN>由ID为N的查询产生的结果
+
+pratitions列
+对于分区表 显示查询的分区ID
+对于非分区表 显示为NULL
+explain select * from customer_login_log where login_time='2015';
+
+type列
+性能 从高到低
+system       这是const联接类型的一个特例 当查询的表只有一行时使用
+const        表中有且只有一个匹配的行时使用 如对主键或是唯一索引的查询 这是效率最高的联接方式
+eq_ref       唯一索或主键索引查找 对于每个索引键 表中只有一条记录与之匹配
+ref          非唯一索引查找 返回匹配某个单独值的所有行
+ref_or_null  类似于ref类型的查询 但是附加了对NULL值列的查询
+index_merge  该联接类型表示使用了索引合并优化方法
+range        索引范围扫描 常见于between > < 这样的查询条件
+index        full index scan 全文索引扫描 同all的区别是 遍历的是索引树
+all          full table scan 全文扫描 这是效率最差的联接方式
+
+extra列
+distinct        优化distinct操作 在找到第一匹配的元组后即停止找同样值的动作
+not exists      使用not exists 来优化查询
+using filesort  使用额外操作进行排序 通常会出现在order by或group by 查询中如果包含任何子查询
+using index     使用了覆盖索引进行查询
+using temporary mysql需要使用临时表来处理查询 常见于排序 子查询 和分组查询
+using where     需要在MySQL服务器层使用where条件来过滤数据
+select tables optimized away  直接通过索引来获得数据 不用访问表
+
+possible_keys列
+指出MySQL能使用那些索引来优化查询
+查询列所涉及到的列上的索引都会被列出 但不一定会被使用
+
+key列
+查询优化器优化查询实际所使用的索引
+如果没有可用的索引 则显示为NULL
+如查询使用了覆盖索引 则该索引仅出现在key列中
+
+key_len列
+表示索引字段的最大可能长度
+key_len的长度由字段定义计算而来 并非数据的实际长度
+
+ref列
+表示那些列或常量被用于查找索引列上的值
+
+rows列
+表示MySQL通过索引统计信息 估算的所需读取的行数
+rows值的大小是个统计抽样结果 并不十分准确
+
+filtered列
+表示返回结果的行数占需读取行数的百分比
+filtered列的值越大越好
+filtered列的值依赖统计信息
+
+执行计划的限制
+无法展示存储过程 触发器 UDF对查询的影响
+无法使用explain对存储过程进行分析
+早期版本的MySQL只支持对select语句进行分析
