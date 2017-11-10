@@ -855,3 +855,95 @@ filtered列的值依赖统计信息
 无法展示存储过程 触发器 UDF对查询的影响
 无法使用explain对存储过程进行分析
 早期版本的MySQL只支持对select语句进行分析
+优化评论分页查询
+explain select customer_id,title,content from product_comment where audit_status=1 and product_id=199726 limit 0,5;
+possible_keys:NULL key:NULL
+create index idx_productID_auditStatus on product_comment(product_id,audit_status);
+possible_keys:idx_productID_auditStatus key:idx_productID_auditStatus
+
+进一步优化评论分页查询
+select t.customer_id,t.title,t.content from (
+select comment_id from product_comment where product_id=199727 and audit_status=1 limit 0,15
+) a join product_comment t on a.comment_id=t.comment_id;
+
+如何删除重复数据
+删除评论表中对同一订单同一商品的重复评论 只保留最早的一条
+步骤一 查看是否存在对于同一订单同一商品的重复评论
+步骤二 备份product_comment表
+步骤三 删除同一订单的重复评论
+select order_id,product_id,count(*) from product_comment 
+group by order_id,product_id having count(*) > 1;
+
+select * from product_comment where order_id=4 and product_id=134509;
+create table bak_product_comment_161022
+like product_comment;
+insert into bak_product_comment_161022 select * from product_comment;
+
+delete a from product_comment a join(
+select order_id,product_id,min(comment_id) as comment_id from product_comment
+group by order_id,product_id having count(*) >= 2
+) b on a.order_id=b.order_id and a.product_id=b.product_id and a.comment_id > b.comment_id;
+
+select order_id,product_id, count(*) from product_comment 
+group by order_id,product_id having count(*) > 1;
+
+如何进行分区间统计
+统计消费总金额800大于1000元的 800到1000元的 500到800元的 以及500元以下的人数
+select count(case when ifnull(total_money,0) >= 1000 then a.customer_id end) as '大于1000'
+,count(case when ifnull(total_money,0) >= 800 and ifnull(total_money,0) < 1000 then a.customer_id end) as '800-1000'
+,count(case when ifnull(total_money,0) >= 500 and ifnull(total_money,0) < 800 then a.customer_id end) as '500-800'
+,count(case when ifnull(total_money,0) < 500 then a.customer_id end) '小于500'
+from mc_userdb.customer_login a 
+left join (select customer_id,sum(order_money) as total_money
+from mc_orderdb.order_master group by customer_id) b on a.customer_id=b.customer_id;
+
+捕获有问题的SQL
+如何找到需要优化的SQL呢 慢查询日志
+启用mysql慢查询日志
+set global slow_query_log_file=/sql_log/slow_log.log;
+set global log_queries_not_using_indexes=on;
+set global long_query_time=0.001; 抓取执行超过多少时间的SQL(秒)
+set global low_query_log=on;
+
+慢查询日志记录的内容
+time
+
+如何分析慢查询日志
+mysqldumpslow slow-mysql.log
+
+总结
+如何查看SQL的执行计划
+如何通过执行计划对SQL使用索引的情况分析
+如何通过慢查询日志获取有性能问题的SQL
+
+数据库备份
+对于任何数据库来说 备份都是非常重要的
+数据库复制不能取代备份的作用
+逻辑备份和物理备份
+逻辑备份的结果为SQL语句 适合于所有存储引擎
+物理备份是对数据库目录的拷贝 对于内存表只备份结构
+全量备份和增量备份
+全量备份是对整个数据库的一个完整备份
+增量备份是在上次全量或增量备份基础上 对于更改数据进行的备份
+mysqldump 不支持增量备份
+
+使用mysqldump进行备份
+常用语法
+mysqldump [OPTIONS] database [tables]
+mysqldump [OPTIONS] --database [OPTIONS] DB1 [DB2 ...]
+mysqldump [OPTIONS] --all-databases [OPTIONS]
+mysqldump的常用参数
+-u --user=name
+-p --password[=name]
+select  reload  lock tables  replication client  show view  process
+--single-transaction
+-l --lock-tables
+-x --lock-all-tables
+--master-data=[1/2]
+-R --routines
+--triggers
+-E, --events
+--hex-blob
+--tab=path
+-w,--where='过滤条件'
+where只支持单表数据条件导出
