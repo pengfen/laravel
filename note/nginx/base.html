@@ -99,3 +99,87 @@ pid nginx服务启动时候pid
 
 events worker_connections 每个进程允许最大连接数
 use 工作进程数
+
+systemctl restart nginx.service
+systemctl reload nginx.service
+
+1.HTTP请求
+客户端 ---request,response--- 服务端
+request 包括请求行 请求头部 请求数据
+response 包括状态行 消息报头 响应正文
+
+2.Nginx日志类型
+包括 error.log access_log
+log_format
+Syntax: log_format name [escape=default|json] string ...;
+Default: log_format combined "...";
+Context:http
+
+error_log /var/log/nginx/error.log warn;
+access_log /var/log/nginx/access.log main;
+log_format main '$remote_addr - $remote_user [$time_local] "$request"'
+'$status $body_bytes_sent "$http_referer" '
+'"$http_user_agent" "$http_x_forwarded_for"';
+tail -n200 /var/log/nginx/access.log
+
+Nginx变量
+HTTP请求变量 - arg_PARAMETER http_HEADER sent_http_HEADER
+内置变量 - Nginx内置的
+自定义变量 - 自己定义
+
+Nginx模块讲解
+Nginx官方模块
+第三方模块
+
+安装编译参数讲解
+--with-http_stub_status_module Nginx的客户端状态
+http_stub_status_module配置
+Syntax: stub_status;
+Default: 
+Context:server,location
+
+默认模块讲解
+--with-http_random_index_module 目录中选择一个随机主页
+random_index_module
+Syntax: random_index on | off;
+Default: random_index off;
+Context:location
+
+--with-http_sub_module HTTP内容替换
+http_sub_module
+Syntax: sub_filter string replacement;
+Default:
+Context:http,server,location
+
+Syntax: sub_filter_last_modified on|off;
+Default:sub_filter_last_modified off;
+Context:http,server,location
+
+Syntax: sub_filter_once on|off;
+Default: sub_filter_once on;
+Context:http,server,location
+
+location / {
+    sub_filter '<a>imooc' '<a>IMOOC';
+}
+
+Nginx的请求限制
+连接频率限制 limit_conn_module
+请求频率限制 limit_req_module
+
+HTTP协议的连接与请求
+HTTP协议版本  连接关系
+HTTP1.0       TCP不能复用
+HTTP1.1       顺序性TCP复用
+HTTP2.0       多路复用TCP复用
+HTTP请求建立在一次TCP连接基础上
+一次TCP请求至少产生一次HTTP请求
+
+连接限制
+Syntax: limit_conn_zone key zone=name:size;
+Default:
+Context:http
+
+Syntax: limit_conn_zone number;
+Default:
+Context:http,server,location
