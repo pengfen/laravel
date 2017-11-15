@@ -183,3 +183,24 @@ Context:http
 Syntax: limit_conn_zone number;
 Default:
 Context:http,server,location
+
+Nginx的访问控制
+基于IP的访问控制 http_access_module
+基于用户的信任登录 http_auth_basic_module
+http_access_module
+Syntax: allow address|CIDR|unix:|all;
+Default:
+Context:http,server,location,limit_except
+
+http_access_module局限性
+方法一 采用别的HTTP头信息控制访问 如 HTTP_X_FORWARD_FOR
+方法二 结合geo模块作
+方法三 通过HTTP自定义变量传递
+
+http_auth_basic_module局限性
+1.用户信息依赖文件方式
+2.操作管理机械 效率低下
+
+解决方案
+1.Nginx结合LUA实现高效验证
+2.Nginx和LDAP打通 利用nginx-auth-ldap模块
