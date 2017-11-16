@@ -198,6 +198,19 @@ foreach($info as $teacherid => $item) {
     ]);
 }
 
+// 比较排名 1 2 3 3 5 并列第三, 无第四
+foreach($person as $item) {
+    $comput = array_slice($person,0,$key+1); // 获取当前数据以前的数据
+    $money = $this->award[$i];
+    foreach($comput as $key=>$val) {
+        if ($item['convers'] == $val['convers']) { // 进行比较
+            $money = $this->award[$key];
+            break;
+        }
+    }
+    $i ++;
+}
+
 array_rand($arr); // 随机取数组的值
 
 select unix_timestamp('2017-10-1');
