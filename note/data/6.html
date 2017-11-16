@@ -1017,6 +1017,12 @@ mkdir binlog_bak
 cd binlog_bak
 mysqlbinlog --raw --read-from-remote-server --stop-never --host localhost --port 3306 -urepl -p123456 mysql-bin.000010
 
+mysqldump 单表复制
+mysqldump -u -p -h database_name table_name > /tmp/test.sql
+cd /tmp
+cp test.sql ~
+my database_name < test.sql
+
 mysqldump总结
 使用mysqldump进行备份和恢复
 使用mysqldump进行基于时间点的恢复
