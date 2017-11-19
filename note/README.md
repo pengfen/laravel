@@ -13,3 +13,4 @@ associ.html 关联
 zan.html 赞功能流程
 es.html  elastic
 center.html 个人中心
+trait.html  trait
