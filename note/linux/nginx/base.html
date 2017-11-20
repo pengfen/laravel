@@ -200,12 +200,21 @@ log_format main '$remote_addr - $remote_user [$time_local] "$request"'
 '"$http_user_agent" "$http_x_forwarded_for"';
 tail -n200 /var/log/nginx/access.log
 
-Nginx变量
+3.Nginx变量
 HTTP请求变量 - arg_PARAMETER http_HEADER sent_http_HEADER
 内置变量 - Nginx内置的
 自定义变量 - 自己定义
+// 记录http头user_agent信息
+vi /etc/nginx/nginx.conf
+log_format main '$http_user_agent' '$remote_addr ...'
+nginx -t -c /etc/nginx/nginx.conf
+-t 检测配置文件语法是否正确 -c 配置文件路径
+nginx -s reload -c /etc/nginx/nginx.conf #重新加载配置文件
+ps -aux | grep nginx
+curl http://localhost
+tail -n200 /var/log/nginx/access.log
 
-Nginx模块讲解
+四 Nginx模块讲解
 Nginx官方模块
 第三方模块
 
@@ -216,12 +225,67 @@ Syntax: stub_status;
 Default: 
 Context:server,location
 
+cd /etc/nginx/conf.d/
+cp default.conf /opt/backup/
+vi default.conf
+location /mystatus {
+    stub_status;
+}
+nginx -tc /etc/nginx/nginx.conf
+nginx -s reload -c /etc/nginx/nginx.conf
+ip a
+http://192.168.179.133/mystatus 页面显示以下内容
+Active connections: 3 #nginx当前活动连接数
+server accepts handled requests
+ 12 12 61 #总握手次数 总连接数 总请求数
+Reading: 0 Writing: 1 Waiting: 2 
+
 默认模块讲解
 --with-http_random_index_module 目录中选择一个随机主页
 random_index_module
 Syntax: random_index on | off;
 Default: random_index off;
 Context:location
+
+cd /etc/nginx/conf.d/
+cp /opt/backup/default.conf ./default.conf
+vi default.conf
+random_index on;
+#index index.html index.htm;
+cd /opt/app/code
+vi 1.html
+<html>
+<head>
+    <meta charset='utf-8'>
+	<title>test</title>
+</head>
+<body style='background-color:red;'>
+</body>
+</html>
+vi 2.html
+<html>
+<head>
+    <meta charset='utf-8'>
+	<title>test</title>
+</head>
+<body style='background-color:black;'>
+</body>
+</html>
+3.html
+<html>
+<head>
+    <meta charset='utf-8'>
+	<title>test</title>
+</head>
+<body style='background-color:blue;'>
+</body>
+</html>
+vi /etc/nginx/conf.d/default.conf
+#root /usr/share/nginx/html;
+root /opt/app/code;
+nginx -tc /etc/nginx/nginx.conf
+nginx -s reload -c /etc/nginx/nginx.conf
+http://192.168.179.133 按F5刷新切换首页
 
 --with-http_sub_module HTTP内容替换
 http_sub_module
@@ -237,9 +301,29 @@ Syntax: sub_filter_once on|off;
 Default: sub_filter_once on;
 Context:http,server,location
 
+cd /etc/nginx/conf.d/
+cp /opt/backup/default.conf ./default.conf
+cd /opt/app/code
+vi submodule.html
+<html>
+<head>
+    <meta charset='utf-8'>
+	<title>submodules</title>
+</head>
+<body>
+    <a>jeson</a>
+	<a>at</a>
+	<a>imooc</a>
+</body>
+</html>
+http://192.168.179.133/submodule.html
 location / {
+    root /opt/app/code;
+	index index.html index.htm;
     sub_filter '<a>imooc' '<a>IMOOC';
+	sub_filter_once off; #off会替换所有 on只替换第一个
 }
+http://192.168.179.133/submodule.html ctrl+F5 强刷
 
 Nginx的请求限制
 连接频率限制 limit_conn_module
@@ -262,6 +346,38 @@ Syntax: limit_conn_zone number;
 Default:
 Context:http,server,location
 
+cd /etc/nginx/conf.d/
+cp /opt/backup/default.conf ./default.conf
+limit_conn_zone $binary_remote_addr zone=conn_zone:1m;
+limit_req_zone $binary_remote_addr zone=req_zone:1m rate=1r/s;
+location / {
+    limit_req zone=req_zone;
+}
+nginx -tc /etc/nginx/nginx.conf
+nginx -s reload -c /etc/nginx/nginx.conf
+另开一个客户端
+cd /var/log/nginx/
+tail -f error.log
+
+ab -n 20 -c 20 http://192.168.179.133/1.html
+Complete requests: 20
+Failed requests:   19
+
+使用延迟
+limit_req zone=req_zone burst=3 nodelay;
+#limit_req zone=req_zone;
+nginx -tc /etc/nginx/nginx.conf
+nginx -s reload -c /etc/nginx/nginx.conf
+ab -n 20 -c 20 http://192.168.179.133/1.html
+Complete requests: 20
+Failed requests:   16
+
+连接限制
+limit_conn conn_zone 1;
+nginx -tc /etc/nginx/nginx.conf
+nginx -s reload -c /etc/nginx/nginx.conf
+ab -n 20 -c 20 http://192.168.179.133/1.html
+
 Nginx的访问控制
 基于IP的访问控制 http_access_module
 基于用户的信任登录 http_auth_basic_module
@@ -269,6 +385,29 @@ http_access_module
 Syntax: allow address|CIDR|unix:|all;
 Default:
 Context:http,server,location,limit_except
+
+cd /etc/nginx/conf.d/
+cp /opt/backup/default.conf ./default.conf
+mv default.conf access_mod.conf
+vi /opt/app/code/admin.html
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>admin</title>
+</head>
+<body style="background-color:red;">
+<h1>Admin</h1>
+</body>
+</html>
+
+vi access_mod.conf
+location ~ ^/admin.html {
+    root /opt/app/code;
+	deny 192.168.179.133;
+	allow all;
+	index index.html index.htm;
+}
+curl http://192.168.179.133/admin.html
 
 http_access_module局限性
 方法一 采用别的HTTP头信息控制访问 如 HTTP_X_FORWARD_FOR
