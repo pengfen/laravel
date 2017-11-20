@@ -16,9 +16,14 @@
 Systax: sendfile on|off;
 Default:sendfile off;
 Context:http,server,location,if in location
-
 --with-file-aio 异步文件读取
+
+3 配置语法 tcp_nopush
+Syntax: tcp_nopush on|off;
+Default:tcp_nopush off;
+Context:http,server,location
 作用 sendfile开启的情况下 提高网络包的传输效率
+
 配置语法 tcp_nodelay
 Syntax:tcp_nodelay on|off;
 Default:tcp_nodelay on;
@@ -40,6 +45,33 @@ Context:http,server,location
 http_gzip_static_module 预读gzip功能
 http_gunzip_module 应用支持gunzip的压缩方式
 
+cd /etc/nginx/conf.d/
+cp /opt/backup/default.conf ./default.conf
+mv default.conf static_server.conf
+vim static_server.conf
+location ~ .*\.(jpg|gif|png)$ {
+    #gzip on;
+	#gzip_http_version 1.1;
+	#gzip_comp_level 2;
+	#gzip_types text/plain application/javascript application/x-javascript text/css 
+	application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png
+}
+
+location ~ .*\.(txt|xml)$ {
+#gzip on;
+#gzip_http_version 1.1;
+#gzip_comp_level 1;
+#gzip_types text/plain application/javascript application/x-javascript text/css 
+application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
+root /opt/app/code/doc;
+}
+
+location ~ ^/download {
+gzip_static on;
+tcp_nopush on;
+root /opt/app/code;
+}
+
 浏览器缓存
 HTTP协议定义的缓存机制 (Expires Cache-control)
 
@@ -55,6 +87,11 @@ expires epoch|max|off;
 Default: expires off;
 Context:http,server,location,if in location
 
+location ~ .*.\.(htm|html)$ {
+    expires 24h;
+	root /opt/app/code;
+}
+
 跨域访问
 为什么浏览器禁止跨域访问 不安全 容易出现CSRF攻击
 
@@ -62,6 +99,38 @@ Nginx 怎么作
 Syntax: add_header name value [always];
 Default:
 Context:http,server,location,if in location
+
+vi /opt/app/code/test_origin.html
+<html lang="en">  
+<head>  
+<meta charset="UTF-8" />  
+<title>测试ajax和跨域访问</title>  
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>  
+</head>  
+<script type="text/javascript">  
+$(document).ready(function(){  
+    $.ajax({  
+        type: "GET",  
+        url: "http://jeson.imoocc.com/1.html",  
+        success: function(data) {   
+            alert("sucess!!!");  
+        },  
+        error: function() {  
+            alert("fail!!!,请刷新再试!");  
+        }  
+    });  
+});  
+</script>  
+<body>  
+     <h1>测试跨域访问</h1>
+</body>  
+</html>
+
+location ~ .*\.(htm|html)$ {
+    add_header Access-Control-Allow-Origin http://www.jesonc.com;
+	add_header Access-Control-Allow-Methods GET,POST,PUT,DELETE,OPTIONS;
+	root /opt/app/code;
+}
 
 防盗链
 目的 防止资源被盗用
@@ -72,6 +141,13 @@ Context:http,server,location,if in location
 Syntax: valid_referers none|blocked|server_names|string ...;
 Default:
 Context:server,location
+
+location \ {
+    valid_referers none blocked 192.168.179.133;
+	if ($invalid_referer) {
+	    return 403;
+	}
+}
 
 代理服务
 代理 代为办理
@@ -87,6 +163,25 @@ Context:server,location
 Syntax: proxy_pass URL;
 Default:
 Context:location,if in location,limit_except
+
+location ~ /test_proxy.html$ {
+    proxy_pass http://127.0.0.1:8080
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>imooc1</title>
+</head>
+<body style="background-color:red;">
+    <h1>Welcome to jeson.t.imooc.io</h1>
+</body>
+</html>
+
+location / {
+    if ( $http_x_forwarded_for !~* "^192\.168\.179\.133") {
+	    return 403;
+	}
+}
 
 其他配置语法 缓冲区
 Syntax: proxy_buffering on|off;

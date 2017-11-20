@@ -1,10 +1,33 @@
 动静分离
 通过中间件将动态请求和静态请求分离
-为什么 分离资源 减少不必要的请求消耗 减少请求延时
 
-场景
-URL访问跳转 支持开发设计
-页面跳转 兼容性支持 展示效果等
+upstream php_api {
+    server 192.168.179.134:80;
+}
+
+location ~ \.php$ {
+    proxy_pass http://php_api;
+	index index.html index.htm;
+}
+
+location ~ \.(jpg|png|gif)$ {
+    expires 1h;
+	gzip on;
+}
+
+2.为什么 分离资源 减少不必要的请求消耗 减少请求延时
+请求 --- 中间件 --- 程序框架 --- 程序逻辑 --- 数据资源 
+静态请求 --- 中间件
+
+3.场景
+请求 --- nginx --- jsp --- tomcat
+静态请求 --- nginx --- jpg,png --- 静态资源
+
+Nginx的rewrite规则
+实现url重写以及重定向
+
+2.场景
+URL访问跳转 支持开发设计  页面跳转 兼容性支持 展示效果等
 SEO优化
 维护 后台维护 流量转发等
 安全
@@ -16,7 +39,7 @@ Context:server,location,if
 
 rewrite ^(.*)$ /pages/maintain.html|break;
 
-正则表达式
+4.正则表达式
 .      匹配除换行符以外的任意字符
 ?      重复0次或1次
 +      重复1次或更多次
@@ -35,20 +58,62 @@ if ($http_user_agent ~ MSIE) {
     rewrite ^(.*)$ /msie/$1 break;
 }
 
+pcre
+pcre-config pcregrep pcretest
+pcretest
+re> /(\d+)\.(\d+)\.(\d+)\.(\d+)/
+data>192.168.179.133
+
+
 1.正则表达式了解透彻
 
-flag
+5.flag
 last       停止rewrite检测
 break      停止rewrite检测
 redirect   返回302临时重定向 地址栏会显示跳转后的地址
 permanent  返回301永久重定向 地址栏会显示跳转后的地址
 
-Rewrite规则优先级
+location ~ ^/break {
+    rewrite ^/break /test/ break;
+}
+
+location ~ ^/last {
+    rewrite ^/last /test/ last;
+}
+
+location /test/ {
+    default_type application/json;
+	return 200 '{"status":"success"}';
+}
+
+location ~ ^/imooc {
+    rewrite ^/imooc http://www.baidu.com/ redirect;
+}
+nginx -s stop -c /etc/nginx/nginx.conf #停止服务后页面不缓存
+
+location ~ ^/imooc {
+    rewrite ^/imooc http://www.baidu.com/ permanent;
+}
+nginx -s stop -c /etc/nginx/nginx.conf #停止服务后页面一直在
+
+location / {
+    rewrite ^/course-(\d+)-(\d+)-(\d+)\.html$ /course/$1/$2/counser_$3.html break;
+	
+	if ($http_user_agent ~* Chrome) {
+	    rewrite ^/nginx http://coding.imooc.com/class/121.html redirect;
+	}
+	
+	if (!-f $request_filename) {
+	    rewrite ^/(.*)$ http://www.baidu.com/$1 redirect;
+	}
+}
+
+5.Rewrite规则优先级
 执行server块的rewrite指令
 执行location匹配
 执行选定的location中的rewrite
 
-优雅的Rewrite规则书写
+5.优雅的Rewrite规则书写
 RewriteCond %{HTTP_HOST} nginx.org
 RewriteRule (.*)
 
@@ -60,3 +125,145 @@ rewrite (.*) http://www.nginx.org$1;
 }
 ...
 }
+
+server {
+    listen 80;
+	server_name nginx.org;
+	rewrite ^ http://www.nginx.org$request_uri?;
+}
+
+Nginx高级模块
+介绍一些最新或者理解难度稍高的Nginx模块
+
+2.secure_link_module模块
+制定并允许检查请求的链接的真实性以保护资源免遭未经授权的访问
+限制链接生效周期
+secure_link_module配置语法
+Syntax: secure_link expression;
+Default:
+Context:http,server,location
+
+Syntax: secure_link_md5 expression;
+Default:
+Context:http,server,location
+
+location / {
+    secure_link $arg_md5,$arg_expires;
+	secure_link_md5 "$secure_link_expires$uri imooc";
+	
+	if ($secure_link = "") {
+	    return 403;
+	}
+	
+	if ($secure_link = "0") {
+	    return 410;
+	}
+}
+
+vi /opt/work/md5url.sh
+#!/bin/sh
+
+servername="imooc.io"
+download_file="/download/file.img"
+time_num=$(date -d "2010-10-18 00:00:00" +%s)
+secret_num="imooc"
+
+res=$(echo -n "${time_num}${download_file} ${secret_num}"|openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =)
+
+echo "http://${servername}${download_file}?md5=${res}&expires=${time_num}"
+
+1.geoip_module模块
+基于IP地址匹配MaxMind GeoIP二进制文件 读取IP所在地域信息
+yum install nginx-module-geoip
+
+2.http_geoip_module使用场景
+区别国内外作HTTP访问规则
+区别国内城市地域作HTTP访问规则
+
+cd /etc/nginx
+load_module "modules/ngx_http_geoip_module.so";
+load_module "modules/ngx_stream_geoip_module.so";
+
+vi /opt/work/download_geoip.sh
+#!/bin/sh
+wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gzip
+wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+
+cd /etc/nginx/conf.d/
+vi default.conf
+geoip_country /etc/nginx/geoip/GeoIP.dat;
+geoip_city /etc/nginx/geoip/GeoLiteCity.dat;
+
+location / {
+    if ($geoip_country_code != CN) {
+	    return 403;
+	}
+}
+
+location /myip {
+    default_type text/plain;
+	return 200 "$remote_addr $geoip_country_name $geoip_country_code $geoip_city";
+}
+
+HTTPS服务
+HTTPS协议原理 优势劣势
+实战构建一个满足苹果要求的HTTPS后台服务
+
+1.为什么需要HTTPS  原因 HTTP不安全
+传输数据被中间人盗用 信息泄露
+数据内容劫持 篡改
+2.HTTPS协议的实现
+对传输内容进行加密以及身份验证
+对称加密和非对称加密
+
+HTTPS加密协议原理
+生成密钥和CA证书
+openssl version
+nginx -v
+
+步骤一 生成key密钥
+步骤二 生成证书签名请求文件(csr文件)
+步骤三 生成证书签名文件(CA文件)
+
+Nginx的HTTPS语法配置
+Syntax: ssl on|off;
+Default:ssl off;
+Context:http,server
+
+Syntax: ssl_certificate file;
+Default:
+Context:http,server
+
+Syntax: ssl_certificate_key file;
+Default:
+Context:http,server
+
+server {
+    listen 443;
+	server_name localhost;
+	ssl on;
+	ssl_certificate /etc/nginx/ssl_key/jesonc.crt;
+	ssl_certificate_key /etc/nginx/ssl_key/jesonc.key;
+}
+
+场景 配置苹果要求的证书
+a.服务器所有的连接使用TLS1.2以上版本(openssl 1.0.2)
+b.HTTPS证书必须使用SHA256以上哈希算法答名
+c.HTTPS证书必须使用RSA 2048位或ECC 256位以上公钥算法
+d.使用前向加密技术
+
+cd /opt/work/update_openssl.sh #更新openssl
+#!/bin/sh
+cd /opt/download
+wget https://www.openssl.org/source/openssl-1.0.2k.tar.gz
+tar -zxvf openssl-1.0.2k.tar.gz
+cd openssl-1.0.2k
+./config --prefix=/usr/local/openssl
+make && make install
+mv /usr/bin/openssl /usr/bin/openssl.OFF
+mv /usr/include/openssl /usr/include/openssl.OFF
+ln -s /usr/local/openssl/bin/openssl /usr/bin/openssl
+ln -s /usr/local/openssl/include/openssl /usr/include/openssl
+echo "/usr/local/openssl/lib" >>/etc/ld.so.conf
+ldconfig -value
+openssl version -a
