@@ -20,6 +20,48 @@ Promise使用
 module.exports和ES6 import/export 的使用
 es6-2.html
 
+AMD CMD CommonJs和ES6对比
+AMD是RequireJS在推广过程中对模块定义的规范化产出
+define(['package/lib'], function(lib){
+    function foo(){
+	    lib.log("welcome to here");
+	}
+	return {
+	    foo:foo
+	}
+});
 
+CMD是SeaJS在推广过程中对模块定义的规范化产出
+// 所有模块都通过 define 来定义
+define(function(require, exports, module) {
+    // 通过 require 引入依赖
+	var $ = require('jquery');
+	var Spinning = require('./spinning');
+}
 
+CommonJS规范 module.exports
+exports.area = function(r) {
+    return Math.PI * r * r;
+};
 
+exports.circumference = function(r) {
+    return 2 * Math.PI * r;
+}
+
+ES6特性 export/import
+export default{
+    props:["num"],
+	data() {
+	    retun{}
+	},
+	methods:{
+	    increment(){
+		    this.$emit("incre");
+			
+			import('./../util')
+		},
+		decrement(){
+		    this.$emit("decre");
+		}
+	}
+}

@@ -1,0 +1,62 @@
+动静分离
+通过中间件将动态请求和静态请求分离
+为什么 分离资源 减少不必要的请求消耗 减少请求延时
+
+场景
+URL访问跳转 支持开发设计
+页面跳转 兼容性支持 展示效果等
+SEO优化
+维护 后台维护 流量转发等
+安全
+
+配置语法
+Syntax: rewrite regex replacement [flag];
+Default:
+Context:server,location,if
+
+rewrite ^(.*)$ /pages/maintain.html|break;
+
+正则表达式
+.      匹配除换行符以外的任意字符
+?      重复0次或1次
++      重复1次或更多次
+*      最少链接数 那个机器连接数少就分发
+\d     匹配数字
+^      匹配字符串的开始
+$      匹配字符串的介绍
+{n}    重复n次
+{n,}   重复n次或更多次
+[c]    匹配单个字符c
+[a-z]  匹配a-z小写字母的任意一个
+\      转义字符
+rewrite index\.php$ /pages/maintain.html break;
+()     用于匹配括号之间的内容 通过$1 $2调用
+if ($http_user_agent ~ MSIE) {
+    rewrite ^(.*)$ /msie/$1 break;
+}
+
+1.正则表达式了解透彻
+
+flag
+last       停止rewrite检测
+break      停止rewrite检测
+redirect   返回302临时重定向 地址栏会显示跳转后的地址
+permanent  返回301永久重定向 地址栏会显示跳转后的地址
+
+Rewrite规则优先级
+执行server块的rewrite指令
+执行location匹配
+执行选定的location中的rewrite
+
+优雅的Rewrite规则书写
+RewriteCond %{HTTP_HOST} nginx.org
+RewriteRule (.*)
+
+server {
+listen 80;
+server_name www.nginx.org nginx.org;
+if ($http_host=nginx.org) {
+rewrite (.*) http://www.nginx.org$1;
+}
+...
+}

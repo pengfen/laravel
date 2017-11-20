@@ -13,3 +13,6 @@ compar.html   框架对比
 config.html   配置
 syntax.html   语法
 ecma.html     es6
+goods 商品相关组件
+mongodb.html MongoDB
+nodejs.html  Node.js
