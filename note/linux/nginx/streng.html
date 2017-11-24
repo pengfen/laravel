@@ -267,3 +267,156 @@ ln -s /usr/local/openssl/include/openssl /usr/include/openssl
 echo "/usr/local/openssl/lib" >>/etc/ld.so.conf
 ldconfig -value
 openssl version -a
+
+HTTPS服务优化
+方法一 激活keepalive长连接
+方法二 设置ssl session缓存
+
+keepalive_timeout 100;
+ssl on;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 10m;
+
+ssl_certificate /etc/nginx/ssl_key/jesonc_apple.crt;
+ssl_certificate_key /etc/nginx/ssl_key/jesonc.key;
+
+Nginx与Lua开发
+Lua及基础语法
+Nginx与Lua环境
+场景 用Nginx结合Lua实现代码的灰度发布
+1.Lua 是一个简洁 轻量 可扩展的脚本语言
+Nginx+Lua优势
+充分的结合Nginx的并发处理epoll优势和Lua的轻量 实现简单的功能且高并发的场景
+
+2.Lua的基础语法
+1.安装 yun install lua
+
+lua
+>print("welcome to lua world");
+
+vi test.lua
+#!/usr/bin/lua
+print("welcome to lua world");
+chmod a+rx ./test.lua
+./test.lua
+
+2.注释
+-行注释
+--[[块注释]]
+
+3.变量
+a = 'alo\n123'
+布尔类型只有nil和false  false 数字0 ‘’空字符串
+lua中的变量如果没有特殊说明 全是全局变量
+
+4.while循环语句
+sum = 0
+num = 1
+while num <= 100 do
+    sum = sum + num
+	num = num + 1
+end
+print("sum=",sum)
+Lua没有++或是+=这样的操作
+
+5.for循环语句
+sum = 0
+for i = 1,100 do
+    sum = sum + i
+end
+
+6.if-else判断语句
+if age == 40 and sex == "Male" then
+    print("大于40男人")
+elseif age > 60 and sex ~= "Female" then
+    print("非女人而且大于60")
+else
+    local age = io.read()
+	print("Your age is"..age)
+end
+
+2.Nginx+Lua环境
+1.luaJIT
+2.ngx_devel_kit和lua-nginx-module
+3.重新编译Nginx
+
+www.imooc.com/article/19597
+
+Nginx调用lua模块指令
+Nginx的可插拔模块化加载执行 共11个处理阶段
+set_by_lua set_by_lua_file 设置nginx变量 可以实现复杂的赋值逻辑
+access_by_lua access_by_lua_file 请求访问阶段处理 用于访问控制
+content_by_lua content_by_lua_file 内容处理器 接收请求处理并输出响应
+
+Nginx Lua API
+ngx.var nginx变量
+ngx.req.get_headers 获取请求头
+ngx.req.get_uri_args 获取url请求参数
+ngx.redirect 重定向
+ngx.print 输出响应内容体
+ngx.say 通ngx.print 但是会最后输出一个换行符
+ngx.header 输出响应头
+
+实战场景 灰度发布
+按照一定的关系区别 分部分的代码进行上线 使代码的发布能平滑过渡上线
+1.用户的信息cookie等信息区别
+2.根据用户的ip地址
+
+access_log /var/log/nginx/log/host.access.log main;
+
+location /hello {
+    default_type 'text/plain';
+	content_by_lua 'ngx.say("welcome");
+}
+
+location /myip {
+    default_type 'text/plain';
+	content_by_lua '
+	clientIP = ngx.req.get_headers(){"x_forwarded_for"}
+	ngx.say("IP:",clientIP)
+	'
+}
+
+location / {
+    default_type "text/html";
+	content_by_lua_file /opt/app/lua/dep.lua;
+	#add_after_body "$http_x_forwarded_for";
+}
+
+location @server{
+    proxy_pass http://127.0.0.1:9090
+}
+
+clientIP = ngx.req.get_headers()["X-Real-IP"]
+if clientIP == nil then
+    clientIP = ngx.req.get_headers()["x_forwarded_for"]
+end
+if clientIP == nil then
+    clientIP = ngx.var.remote_addr
+end
+    local memceched = require "resty.memceched"
+	local memc, err = memceched:new()
+	if not memc then
+	    ngx.say("failed to instantiate memc: ", err)
+		return
+	end
+	local ok, err = memc:connect("127.0.0.1", 11211)
+	if not ok then
+	    ngx.say("failed to connect: ", err)
+		return
+	end
+	local res, flags, err = memc:get(clientIP)
+	ngx.say("value key: ",res,clientIP)
+	if err then
+	    ngx.say("failed to get clientIP ", err)
+		return
+	end
+	if res == "1" then
+	    ngx.exec("@server_test")
+		return
+	end
+	ngx.exec("@server")
+	
+vi install_memcache_lua.sh
+tar -zxvf v0.11.tar.gz
+cp -r lua-resty-memcached-0.11/lib/resty /usr/local/share/lua/5.1/
