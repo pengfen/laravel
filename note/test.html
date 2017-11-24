@@ -218,6 +218,46 @@ https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel= #根据手机号获�
 
 array_rand($arr); // 随机取数组的值
 
+js树
+    <link href="/ztree/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/ztree/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript">
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+
+var zNodes = <?php echo json_encode($info)?>;
+
+$(document).ready(function(){
+			   $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		 });
+
+// 添加多选
+check: {  
+    enable: true,  
+           chkStyle: "checkbox",  
+           chkboxType: { "Y": "s", "N": "ps" }  
+},
+
+    // 去除图标
+    view {
+        showIcon:false
+    }
+
+// 选中
+$('#confirm').click(function(){
+    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+    var nodes = treeObj.getCheckedNodes(true);
+    for (var i = 0; i < nodes.length; i ++) {
+        alert('id ' + nodes[i].id + ' name ' + nodes[i].name + ' userid ' + nodes[i].userid);
+    }
+});
+
+
 select unix_timestamp('2017-10-1');
 
 concat_ws('/',teacherid,phone) pt ("pt" => "62707/13888889996")
